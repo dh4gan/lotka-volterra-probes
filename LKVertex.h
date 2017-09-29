@@ -65,7 +65,9 @@ public:
     void addOutwardPredator(double increment){predatorOut = predatorOut+increment;}
     void addInwardPredator(double increment){predatorIn = predatorIn+increment;}
 
-    void initialiseSystem(double time, double dt, double initialPrey, double initialPredator);
+    void initialiseLKSystem(double time, double dt);
+    void initialiseLKSystem(double time, double dt, double initialPrey, double initialPredator);
+    void determineTZero(double time);
     void computeOutwardFlux(double t);
     void updateLKSystem(double t);
     void writeToFile(double time);

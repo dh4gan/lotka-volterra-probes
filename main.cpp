@@ -9,6 +9,7 @@
  */
 
 #include "LKVertex.h"
+#include "Graph.h"
 #include <iostream>
 using namespace std;
 
@@ -24,8 +25,8 @@ int main()
     double predDeath = 1.0;
 
     double mutate = 0.0;
-    double outflow = 0.0;
-    double velocity = 0.0;
+    double outflow = 0.1;
+    double velocity = 0.5;
     double t0 = 0.0;
 
     double initialPrey = 1.8;
@@ -37,13 +38,15 @@ int main()
     double t = 0.0;
     int ID = 1;
 
-    LKVertex test(ID,initialPrey, initialPred, preyGrow,
+    Vector3D position1(0.0,0.0,0.0);
+
+    LKVertex test(ID,position1,initialPrey, initialPred, preyGrow,
 	    preyDeath,predGrow, predDeath, mutate,
 	    outflow, velocity, t0);
 
-    // do test integrations
+    // do test integration on single system
 
-    test.initialiseSystem(t0, dt, initialPrey, initialPred);
+    test.initialiseLKSystem(t0, dt, initialPrey, initialPred);
 
     while(t < tmax)
 	{
@@ -51,6 +54,49 @@ int main()
 	test.updateLKSystem(t);
 	cout << t << endl;
 	test.writeToFile(t);
+	t = t+dt;
+	}
+
+
+    vector<Vertex*> vertices;
+
+    Vector3D position2(10.0,0.0,0.0);
+
+    vertices.push_back(new LKVertex(ID,initialPrey, initialPred, preyGrow,
+    	    preyDeath,predGrow, predDeath, mutate,
+    	    outflow, velocity, t0));
+
+    ID++;
+    initialPrey = 0.0;
+    initialPred = 0.0;
+
+    vertices.push_back(new LKVertex(ID,initialPrey, initialPred, preyGrow,
+    	    preyDeath,predGrow, predDeath, mutate,
+    	    outflow, velocity, t0));
+
+
+    // Create new graph
+
+    vector<Edge*> edges;
+
+    double range = 40.0;
+    Graph graph(vertices,edges);
+    graph.createNeighbourNetwork(range);
+
+
+    // Attempt coupled calculation
+
+    t = 0;
+
+
+    graph.initialiseLKSystems(t,dt);
+
+    // TODO - how to set t0 when empty site begins receiving inflow
+    while(t<tmax)
+	{
+
+	graph.updateLKSystems(t);
+
 	t = t+dt;
 	}
 

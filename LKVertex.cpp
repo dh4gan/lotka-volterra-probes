@@ -122,7 +122,7 @@ LKVertex::LKVertex(int ID, Vector3D pos, double initialPrey, double initialPreda
     outputFile = NULL;
     }
 
-void LKVertex::initialiseSystem(double time, double dt, double initialPrey, double initialPredator)
+void LKVertex::initialiseLKSystem(double time, double dt)
 
     {
 
@@ -131,11 +131,15 @@ void LKVertex::initialiseSystem(double time, double dt, double initialPrey, doub
      * sets up the LK system for integration
      */
 
-    tzero = time;
+    if(nPrey+nPredator > 0.0)
+	{
+	tzero = time;
+	}
+    else
+	{
+	tzero = -1.0e30;
+	}
     timestep = dt;
-    nPrey = initialPrey;
-    nPredator = initialPredator;
-
 
     // Open file for writing
     ostringstream ss;
@@ -144,6 +148,24 @@ void LKVertex::initialiseSystem(double time, double dt, double initialPrey, doub
     string fileNumber = ss.str();
     string logFileName = "LKSystem_"+fileNumber+".log";
     outputFile = fopen(logFileName.c_str(), "w");
+
+    }
+
+void LKVertex::initialiseLKSystem(double time, double dt, double initialPrey, double initialPredator)
+
+    {
+    initialiseLKSystem(time, dt);
+    nPrey = initialPrey;
+    nPredator = initialPredator;
+    }
+
+void LKVertex::determineTZero(double time)
+    {
+
+    if(tzero<0.0 and nPrey+nPredator>0.0)
+	{
+	tzero = time;
+	}
 
     }
 
@@ -177,6 +199,9 @@ void LKVertex::updateLKSystem(double t)
     nPrey = nPrey + ratePrey*timestep;
     nPredator = nPredator + ratePredator*timestep;
 
+    determineTZero(t);
+    writeToFile(t);
+
     }
 
 void LKVertex::computeOutwardFlux(double t)
@@ -197,27 +222,31 @@ void LKVertex::computeOutwardFlux(double t)
 
     int nConnected = connected.size();
 
-    // loop over each connected vertex
-    for (int i=0; i<nConnected; i++)
+    if (tzero > 0.0) // outward flux only happens if prey/predators present (t>tzero)
 	{
-
-	// Flux only active if distance/speed < t-tzero
-
-	v = connected[i];
-	distance = calcVertexSeparation(v);
-
-	if(t-tzero < distance/probeVelocity)
+	// loop over each connected vertex
+	for (int i = 0; i < nConnected; i++)
 	    {
-	    outwardPrey = outflowRate*nPrey*probeVelocity/distance;
-	    outwardPredator = outflowRate*nPredator*probeVelocity/distance;
-	    preyOut = preyOut + outwardPrey;
-	    predatorOut = predatorOut + outwardPredator;
 
-	    v->addInwardPrey(outwardPrey);
-	    v->addInwardPredator(outwardPredator);
+	    // Flux only active if distance/speed < t-tzero
+
+	    v = connected[i];
+	    distance = calcVertexSeparation(v);
+
+	    if (t - tzero < distance / probeVelocity)
+		{
+		outwardPrey = outflowRate * nPrey * probeVelocity / distance;
+		outwardPredator = outflowRate * nPredator * probeVelocity
+			/ distance;
+		preyOut = preyOut + outwardPrey;
+		predatorOut = predatorOut + outwardPredator;
+
+		v->addInwardPrey(outwardPrey);
+		v->addInwardPredator(outwardPredator);
+		}
+
 	    }
 
 	}
-
     }
 

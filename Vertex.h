@@ -103,7 +103,8 @@ public:
         virtual void addOutwardPredator(double increment){}
         virtual void addInwardPredator(double increment){}
 
-        virtual void initialiseSystem(double time, double dt, double initialPrey, double initialPredator){};
+        virtual void initialiseLKSystem(double time, double dt, double initialPrey, double initialPredator){};
+        virtual void initialiseLKSystem(double time, double dt){};
         virtual void computeOutwardFlux(double t){};
         virtual void updateLKSystem(double t){};
         virtual void writeToFile(double time){};

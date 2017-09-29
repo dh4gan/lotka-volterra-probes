@@ -73,11 +73,10 @@ public:
     void readFromFile(string &inputFileString);
     void writeToFile(string &outputFileString);
 
-    //TODO - write method that drives LKsystem solution
-    //TODO - write method to generate Graph based on vector of Vertex objects (x nearest neighbours)
 
     void clearAllEdges();
     void createNeighbourNetwork(double range);
+    void initialiseLKSystems(double t,double dt);
     void updateLKSystems(double t);
 
 

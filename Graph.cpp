@@ -1298,6 +1298,22 @@ void Graph::createNeighbourNetwork(double range)
     }
 
 
+void Graph::initialiseLKSystems(double time, double dt)
+
+    {
+    /*
+     * Written 29/9/17 by dh4gan
+     * sets up all systems
+     */
+
+    for (int i=0; i<nVertices; i++)
+	{
+	vertices[i]->initialiseLKSystem(time,dt);
+
+	}
+
+    }
+
 void Graph::updateLKSystems(double t)
 
     {
@@ -1305,6 +1321,8 @@ void Graph::updateLKSystems(double t)
      * Written 29/9/17 by dh4gan
      * drives integration of LK equations for LKVertex objects
      */
+
+    // TODO - where to compute fluxes?
 
     for (int i=0; i<nVertices; i++)
 	{
