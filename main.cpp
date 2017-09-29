@@ -35,8 +35,9 @@ int main()
 
     double tmax = 5.0;
     double t = 0.0;
+    int ID = 1;
 
-    LKVertex test(initialPrey, initialPred, preyGrow,
+    LKVertex test(ID,initialPrey, initialPred, preyGrow,
 	    preyDeath,predGrow, predDeath, mutate,
 	    outflow, velocity, t0);
 

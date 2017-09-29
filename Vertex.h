@@ -22,6 +22,8 @@ class Vertex
 public:
     Vertex();
     Vertex(Vector3D pos);
+    Vertex(int ID);
+    Vertex(int ID, Vector3D pos);
     virtual ~Vertex();
 
     int getID(){return ident;}
@@ -49,6 +51,7 @@ public:
 
     bool inVector(vector<Vertex*> vertices);
 
+    void clearEdges();
     void setEdges(vector<Edge*> catalogue){edges=catalogue;}
     vector<Edge*> getEdges(){return edges;}
 
@@ -57,6 +60,53 @@ public:
     int getNEdges(){return nEdge;}
 
     void addConnectedEdge(Edge* e, Vertex* other);
+
+
+    // virtual methods for LKVertex
+
+    // set and get methods
+
+        virtual void setNPrey(double n){}
+        virtual double getNPrey(){return -1;}
+
+        virtual void setNPredator(double n){}
+        virtual double getNPredator(){return -1;}
+
+        virtual void setPreyGrowth(double a){}
+        virtual double getPreyGrowth(){return -1;}
+
+        virtual void setPreyDeath(double a){}
+        virtual double getPreyDeath(){return -1;}
+
+        virtual void setPredatorGrowth(double a){}
+        virtual double getPredatorGrowth(){return -1;}
+
+        virtual void setPredatorDeath(double a){}
+        virtual double getPredatorDeath(){return -1;}
+
+        virtual void setMutationRate(double m){}
+        virtual double getMutationRate(){return -1;}
+
+        virtual void setOutflowRate(double o){}
+        virtual double getOutflowRate(){return -1;}
+
+        virtual void setProbeVelocity(double v){}
+        virtual double getProbeVelocity(){return -1;}
+
+        virtual void setTZero(double t){}
+        virtual double getTZero(double t){return -1;}
+
+        // Increment methods for inward/outward fluxes of predators/prey
+        virtual void addOutwardPrey(double increment){}
+        virtual void addInwardPrey(double increment){}
+
+        virtual void addOutwardPredator(double increment){}
+        virtual void addInwardPredator(double increment){}
+
+        virtual void initialiseSystem(double time, double dt, double initialPrey, double initialPredator){};
+        virtual void computeOutwardFlux(double t){};
+        virtual void updateLKSystem(double t){};
+        virtual void writeToFile(double time){};
 
 
 protected:

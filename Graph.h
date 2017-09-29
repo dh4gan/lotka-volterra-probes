@@ -76,7 +76,9 @@ public:
     //TODO - write method that drives LKsystem solution
     //TODO - write method to generate Graph based on vector of Vertex objects (x nearest neighbours)
 
-    void updateLKSystems(double t, double timestep);
+    void clearAllEdges();
+    void createNeighbourNetwork(double range);
+    void updateLKSystems(double t);
 
 
 protected:

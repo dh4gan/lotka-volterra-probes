@@ -7,9 +7,11 @@
 
 #include "LKVertex.h"
 #include <string>
+#include <sstream>
+#include <iomanip>
 
-LKVertex::LKVertex() :
-    Vertex()
+LKVertex::LKVertex(int ID) :
+    Vertex(ID)
     {
     nPrey = 1;
     nPredator = 0;
@@ -22,7 +24,7 @@ LKVertex::LKVertex() :
 
     mutationRate = 0.0;
     outflowRate = 0.0;
-    velocity = 1.0;
+    probeVelocity = 1.0;
     tzero = 0.0;
     timestep = 0.0;
 
@@ -37,8 +39,8 @@ LKVertex::LKVertex() :
 
     }
 
-LKVertex::LKVertex(Vector3D pos) :
-    Vertex(pos)
+LKVertex::LKVertex(int ID, Vector3D pos) :
+    Vertex(ID,pos)
     {
     nPrey = 1;
     nPredator = 0;
@@ -51,7 +53,7 @@ LKVertex::LKVertex(Vector3D pos) :
 
     mutationRate = 0.0;
     outflowRate = 0.0;
-    velocity = 1.0;
+    probeVelocity = 1.0;
     tzero = 0.0;
     timestep = 0.0;
 
@@ -65,10 +67,10 @@ LKVertex::LKVertex(Vector3D pos) :
 
     }
 
-LKVertex::LKVertex(double initialPrey, double initialPredator, double preyGrow,
+LKVertex::LKVertex(int ID, double initialPrey, double initialPredator, double preyGrow,
 	    double preyDie, double predGrow, double predDeath,
 	    double mutate, double outflow, double vel, double t0) :
-		    Vertex()
+		    Vertex(ID)
     {
     nPrey = initialPrey;
     nPredator = initialPredator;
@@ -79,7 +81,7 @@ LKVertex::LKVertex(double initialPrey, double initialPredator, double preyGrow,
     predatorDeath = predDeath;
     mutationRate = mutate;
     outflowRate = outflow;
-    velocity = vel;
+    probeVelocity = vel;
     tzero = t0;
     timestep = t0/100.0;
 
@@ -93,10 +95,10 @@ LKVertex::LKVertex(double initialPrey, double initialPredator, double preyGrow,
 
     }
 
-LKVertex::LKVertex(Vector3D pos, double initialPrey, double initialPredator, double preyGrow,
+LKVertex::LKVertex(int ID, Vector3D pos, double initialPrey, double initialPredator, double preyGrow,
 	    double preyDie, double predGrow, double predDeath,
 	    double mutate, double outflow, double vel, double t0) :
-		    Vertex(pos)
+		    Vertex(ID, pos)
     {
     nPrey = initialPrey;
     nPredator = initialPredator;
@@ -107,7 +109,7 @@ LKVertex::LKVertex(Vector3D pos, double initialPrey, double initialPredator, dou
     predatorDeath = predDeath;
     mutationRate = mutate;
     outflowRate = outflow;
-    velocity = vel;
+    probeVelocity = vel;
     tzero = t0;
     timestep = t0/100.0;
 
@@ -136,7 +138,11 @@ void LKVertex::initialiseSystem(double time, double dt, double initialPrey, doub
 
 
     // Open file for writing
-    string logFileName = "LKSystem.log";
+    ostringstream ss;
+
+    ss << setw(5) << setfill('0') << ident;
+    string fileNumber = ss.str();
+    string logFileName = "LKSystem_"+fileNumber+".log";
     outputFile = fopen(logFileName.c_str(), "w");
 
     }
@@ -168,10 +174,50 @@ void LKVertex::updateLKSystem(double t)
     // same for predators (but also include a mutation term from prey into predators)
     ratePredator = predatorGrowth*nPredator*nPrey - predatorDeath*nPredator + mutationRate*nPrey - predatorOut + predatorIn;
 
-
     nPrey = nPrey + ratePrey*timestep;
     nPredator = nPredator + ratePredator*timestep;
 
+    }
+
+void LKVertex::computeOutwardFlux(double t)
+
+    {
+
+    /*
+     * Written 29/9/17 by dh4gan
+     * computes the flux of predators/prey to connected LKVertex objects
+     * Also updates inward fluxes?
+     */
+
+    double distance, outwardPrey, outwardPredator;
+    Vertex* v;
+    // Get list of all connected vertices
+
+    vector<Vertex*> connected = getConnectedVertices();
+
+    int nConnected = connected.size();
+
+    // loop over each connected vertex
+    for (int i=0; i<nConnected; i++)
+	{
+
+	// Flux only active if distance/speed < t-tzero
+
+	v = connected[i];
+	distance = calcVertexSeparation(v);
+
+	if(t-tzero < distance/probeVelocity)
+	    {
+	    outwardPrey = outflowRate*nPrey*probeVelocity/distance;
+	    outwardPredator = outflowRate*nPredator*probeVelocity/distance;
+	    preyOut = preyOut + outwardPrey;
+	    predatorOut = predatorOut + outwardPredator;
+
+	    v->addInwardPrey(outwardPrey);
+	    v->addInwardPredator(outwardPredator);
+	    }
+
+	}
 
     }
 
