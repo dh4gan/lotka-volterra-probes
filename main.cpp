@@ -24,13 +24,14 @@ int main()
     double predGrow = 1.0;
     double predDeath = 1.0;
 
-    double mutate = 0.0;
-    double outflow = 0.01;
+    double mutate = 1.0e-25;
+    double outflow = 0.0;
     double velocity = 0.5;
     double t0 = 0.0;
 
     double initialPrey = 1.8;
-    double initialPred = 1.8;
+    //double initialPred = 1.8;
+    double initialPred = 0.0;
 
     double dt =0.0001;
 
@@ -79,6 +80,13 @@ int main()
     	    preyDeath,predGrow, predDeath, mutate,
     	    outflow, velocity, t0));
 
+
+    Vector3D position3(0.0,1.0,0.0);
+
+    ID++;
+    vertices.push_back(new LKVertex(ID,position3,initialPrey, initialPred, preyGrow,
+      	    preyDeath,predGrow, predDeath, mutate,
+      	    outflow, velocity, t0));
 
     // Create new graph
 
