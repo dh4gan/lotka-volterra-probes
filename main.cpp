@@ -25,7 +25,7 @@ int main()
     double predDeath = 1.0;
 
     double mutate = 0.0;
-    double outflow = 0.1;
+    double outflow = 0.01;
     double velocity = 0.5;
     double t0 = 0.0;
 
@@ -34,7 +34,7 @@ int main()
 
     double dt =0.0001;
 
-    double tmax = 5.0;
+    double tmax = 10.0;
     double t = 0.0;
     int ID = 1;
 
@@ -46,6 +46,7 @@ int main()
 
     // do test integration on single system
 
+    printf("Testing single system \n");
     test.initialiseLKSystem(t0, dt, initialPrey, initialPred);
 
     while(t < tmax)
@@ -55,14 +56,18 @@ int main()
 	cout << t << endl;
 	test.writeToFile(t);
 	t = t+dt;
+
 	}
 
+    printf("Single system test complete \n");
 
+
+    printf("Attempting two-system test \n");
     vector<Vertex*> vertices;
 
-    Vector3D position2(10.0,0.0,0.0);
+    Vector3D position2(1.0,0.0,0.0);
 
-    vertices.push_back(new LKVertex(ID,initialPrey, initialPred, preyGrow,
+    vertices.push_back(new LKVertex(ID,position1,initialPrey, initialPred, preyGrow,
     	    preyDeath,predGrow, predDeath, mutate,
     	    outflow, velocity, t0));
 
@@ -70,7 +75,7 @@ int main()
     initialPrey = 0.0;
     initialPred = 0.0;
 
-    vertices.push_back(new LKVertex(ID,initialPrey, initialPred, preyGrow,
+    vertices.push_back(new LKVertex(ID,position2,initialPrey, initialPred, preyGrow,
     	    preyDeath,predGrow, predDeath, mutate,
     	    outflow, velocity, t0));
 
@@ -83,18 +88,22 @@ int main()
     Graph graph(vertices,edges);
     graph.createNeighbourNetwork(range);
 
+    string graphFile = "testgraph.txt";
+    graph.writeToFile(graphFile);
 
     // Attempt coupled calculation
 
     t = 0;
 
 
+    printf("Initialising all LK Systems \n");
     graph.initialiseLKSystems(t,dt);
 
-    // TODO - how to set t0 when empty site begins receiving inflow
+
     while(t<tmax)
 	{
 
+	printf("Time: %f \n",t);
 	graph.updateLKSystems(t);
 
 	t = t+dt;

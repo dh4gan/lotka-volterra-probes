@@ -1272,8 +1272,9 @@ void Graph::createNeighbourNetwork(double range)
     for (int i = 0; i < nVertices; i++)
 	{
 
-	for (int j = i; j < nVertices; j++)
+	for (int j = i+1; j < nVertices; j++)
 	    {
+	    printf("%i %i \n",i,j);
 	    distance = vertices[i]->calcVertexSeparation(vertices[j]);
 
 	    // If within range, connect the vertices
@@ -1323,6 +1324,12 @@ void Graph::updateLKSystems(double t)
      */
 
     // TODO - where to compute fluxes?
+
+    for (int i=0; i<nVertices; i++)
+	{
+
+	vertices[i]->computeOutwardFlux(t);
+	}
 
     for (int i=0; i<nVertices; i++)
 	{

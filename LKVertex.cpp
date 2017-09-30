@@ -162,6 +162,7 @@ void LKVertex::initialiseLKSystem(double time, double dt, double initialPrey, do
 void LKVertex::determineTZero(double time)
     {
 
+    printf("ID %i, tzero %f, N+P %f \n", ident,tzero,nPrey+nPredator);
     if(tzero<0.0 and nPrey+nPredator>0.0)
 	{
 	tzero = time;
@@ -177,8 +178,17 @@ void LKVertex::writeToFile(double time)
      *
      */
 
-	string formatString = "%f  %.4E  %.4E  %.4E  %.4E \n";
-	fprintf(outputFile,formatString.c_str(), time, nPrey, nPredator, ratePrey, ratePredator);
+    int nVariables = 7;
+    string formatString = "";
+
+	for (int i=0; i<nVariables; i++)
+	    {
+
+	    formatString = formatString + "%.4E  ";
+	    }
+	formatString = formatString + "\n";
+
+	fprintf(outputFile,formatString.c_str(), time, nPrey, nPredator, ratePrey, ratePredator, preyOut, predatorOut);
     }
 
 void LKVertex::updateLKSystem(double t)
@@ -199,6 +209,8 @@ void LKVertex::updateLKSystem(double t)
     nPrey = nPrey + ratePrey*timestep;
     nPredator = nPredator + ratePredator*timestep;
 
+    if(nPrey < 0.0) nPrey = 0.0;
+    if(nPredator < 0.0) nPredator = 0.0;
     determineTZero(t);
     writeToFile(t);
 
@@ -222,7 +234,7 @@ void LKVertex::computeOutwardFlux(double t)
 
     int nConnected = connected.size();
 
-    if (tzero > 0.0) // outward flux only happens if prey/predators present (t>tzero)
+    if (tzero >= 0.0) // outward flux only happens if prey/predators present (t>tzero)
 	{
 	// loop over each connected vertex
 	for (int i = 0; i < nConnected; i++)
@@ -232,8 +244,9 @@ void LKVertex::computeOutwardFlux(double t)
 
 	    v = connected[i];
 	    distance = calcVertexSeparation(v);
+	    printf("Distance %f, velocity %f, time-tzero %f \n", distance, probeVelocity, t-tzero);
 
-	    if (t - tzero < distance / probeVelocity)
+	    if (t - tzero > distance / probeVelocity)
 		{
 		outwardPrey = outflowRate * nPrey * probeVelocity / distance;
 		outwardPredator = outflowRate * nPredator * probeVelocity
