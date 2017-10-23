@@ -1280,16 +1280,19 @@ void Graph::createNeighbourNetwork(double range)
 	    // If within range, connect the vertices
 	    if (distance < range)
 		{
-		// Add Edge to the graph
-		Edge* e = new Edge(vertices[i], vertices[j], distance);
+		// Add Edges to the graph
+		Edge* e1 = new Edge(vertices[i], vertices[j], distance);
+
+		Edge* e2 = new Edge(vertices[j],vertices[i],distance);
 
 		// Add Edge to each vertex's catalogue of edges
 
-		vertices[i]->addConnectedEdge(e,vertices[j]);
-		vertices[j]->addConnectedEdge(e,vertices[i]);
+		vertices[i]->addConnectedEdge(e1,vertices[j]);
+		vertices[j]->addConnectedEdge(e2,vertices[i]);
 
 		// Finally, add edge to graph
-		addEdge(e);
+		addEdge(e1);
+		addEdge(e2);
 
 		}
 	    }
