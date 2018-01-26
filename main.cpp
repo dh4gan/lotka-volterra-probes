@@ -106,46 +106,6 @@ double uniformSample(double min, double max)
     }
 
 
-
-
-
-Graph generateGraphConstantParameters(vector<Vector3D> positions, double initialPrey, double initialPred, double preyGrow,
-	double  preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0){
-
-    int ID;
-    int nVertices = int(positions.size());
-
-    printf("Generating graph with constant parameters: %i vertices \n",nVertices);
-
-    vector<Vertex*> vertices;
-
-
-    for (int iVertex=0; iVertex<nVertices; iVertex++)
-	{
-
-	ID = iVertex+1;
-        vertices.push_back(new LKVertex(ID,positions[iVertex],initialPrey, initialPred, preyGrow,
-        	    preyDeath,predGrow, predDeath, mutate,
-        	    outflow, velocity, t0));
-
-        // Only first vertex is given non-zero starting values
-        if(iVertex==0)
-            {
-            initialPrey = 0.0;
-            initialPred = 0.0;
-            }
-	}
-
-
-        vector<Edge*> edges;
-
-        double range = 40.0;
-        Graph graph(vertices,edges);
-        graph.createNeighbourNetwork(range);
-
-    return graph;
-}
-
 Graph generateGraphUniformParameters(vector<Vector3D> positions, double initialPrey, double initialPred,
 	double preyGrowMin, double preyGrowMax,
 	double preyDeathMin, double preyDeathMax,
@@ -154,8 +114,6 @@ Graph generateGraphUniformParameters(vector<Vector3D> positions, double initialP
 	double mutateMin, double mutateMax,
 	double outflowMin, double outflowMax,
 	double velocityMin, double velocityMax){
-
-    // TODO - write function that generates a graph from list of vertex Positions (assuming randomised LV parameters)
 
     int ID;
     int nVertices = int(positions.size());

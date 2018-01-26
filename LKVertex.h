@@ -67,6 +67,9 @@ public:
 
     void initialiseLKSystem(double time, double dt);
     void initialiseLKSystem(double time, double dt, double initialPrey, double initialPredator);
+    void setLKParameters(double initialPrey, double initialPred,double preyGrow,
+	    double preyDie, double predGrow, double predDeath,
+	    double mutate, double outflow, double vel, double t0);
     void determineTZero(double time);
     void computeOutwardFlux(double t);
     void updateLKSystem(double t);

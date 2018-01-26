@@ -73,6 +73,26 @@ public:
     void readFromFile(string &inputFileString);
     void writeToFile(string &outputFileString);
 
+    void generateGHZ(double &innerRadius, double &outerRadius, double &scale);
+
+    //TODO move setup of positions from main into Graph
+
+    void generateConstantLKParameters(double initialPrey, double initialPred, double preyGrow,
+	double preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0);
+
+    void generateUniformLKParameters(double initialPrey, double initialPred,
+		double preyGrowMin, double preyGrowMax,
+		double preyDeathMin, double preyDeathMax,
+		double predGrowMin, double predGrowMax,
+		double predDeathMin, double predDeathMax,
+		double mutateMin, double mutateMax,
+		double outflowMin, double outflowMax,
+		double velocityMin, double velocityMax);
+
+    void generateCluster(double rmax);
+
+    //TODO move setup of parameters from main into Graph
+
 
     void clearAllEdges();
     void createNeighbourNetwork(double range);

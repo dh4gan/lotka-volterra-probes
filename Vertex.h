@@ -103,6 +103,10 @@ public:
         virtual void addOutwardPredator(double increment){}
         virtual void addInwardPredator(double increment){}
 
+
+        virtual void setLKParameters(double initialPrey, double initialPred,double preyGrow,
+       	    double preyDie, double predGrow, double predDeath,
+       	    double mutate, double outflow, double vel, double t0){};
         virtual void initialiseLKSystem(double time, double dt, double initialPrey, double initialPredator){};
         virtual void initialiseLKSystem(double time, double dt){};
         virtual void computeOutwardFlux(double t){};

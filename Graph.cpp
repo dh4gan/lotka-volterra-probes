@@ -1302,6 +1302,30 @@ void Graph::createNeighbourNetwork(double range)
     }
 
 
+void Graph::generateConstantLKParameters(double initialPrey, double initialPred, double preyGrow,
+	double preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0)
+    {
+
+
+    for (int i=0; i<nVertices; i++)
+   	{
+
+
+	// Only first vertex is given non-zero starting values of predators/prey
+	if(i!=0)
+	    {
+	    initialPrey=0.0;
+	    initialPred=0.0;
+	    }
+
+	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,mutate,outflow,velocity,t0);
+
+   	}
+
+    }
+
+
+
 void Graph::initialiseLKSystems(double time, double dt)
 
     {
