@@ -1326,14 +1326,15 @@ void Graph::updateLKSystems(double t)
      * drives integration of LK equations for LKVertex objects
      */
 
-    // TODO - where to compute fluxes?
 
+    // Compute outward fluxes of all vertices
     for (int i=0; i<nVertices; i++)
 	{
 
 	vertices[i]->computeOutwardFlux(t);
 	}
 
+    // Now update system
     for (int i=0; i<nVertices; i++)
 	{
 	vertices[i]->updateLKSystem(t);

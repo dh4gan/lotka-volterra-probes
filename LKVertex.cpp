@@ -162,7 +162,7 @@ void LKVertex::initialiseLKSystem(double time, double dt, double initialPrey, do
 void LKVertex::determineTZero(double time)
     {
 
-    printf("ID %i, tzero %f, N+P %f \n", ident,tzero,nPrey+nPredator);
+    //printf("ID %i, tzero %f, N+P %f \n", ident,tzero,nPrey+nPredator);
     if(tzero<0.0 and nPrey+nPredator>0.0)
 	{
 	tzero = time;
@@ -244,7 +244,7 @@ void LKVertex::computeOutwardFlux(double t)
 
 	    v = connected[i];
 	    distance = calcVertexSeparation(v);
-	    printf("Distance %f, velocity %f, time-tzero %f \n", distance, probeVelocity, t-tzero);
+	    //printf("Distance %f, velocity %f, time-tzero %f \n", distance, probeVelocity, t-tzero);
 
 	    if (t - tzero > distance / probeVelocity)
 		{
