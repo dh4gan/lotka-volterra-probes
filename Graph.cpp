@@ -6,6 +6,7 @@
  */
 
 #include "Graph.h"
+#include "Constants.h"
 #include <string>
 #include <algorithm>
 #include <stdlib.h>
@@ -21,6 +22,20 @@ Graph::Graph()
     edges.clear();
 
     srand(time(NULL));
+
+    }
+
+Graph::Graph(int nVert)
+    {
+    nVertices = nVert;
+    nTotalEdges = 0;
+    nConnectedComponents = 0;
+    vertices.clear();
+
+    for (int i=0; i< nVertices; i++)
+	{
+	vertices.push_back(new Vertex());
+	}
 
     }
 
@@ -54,6 +69,96 @@ Graph::~Graph()
      edges.clear();*/
 
     }
+
+// Static methods used by Graph
+
+static double randomReal()
+    {
+    // Returns a random real between zero and 1
+    double number = (double) rand() / (double) RAND_MAX;
+    return number;
+    }
+
+static double uniformSample(double min, double max)
+    {
+    return min + (max-min)*randomReal();
+    }
+
+static Vector3D rotateIntoPlane(Vector3D vec, double argumentPeriapsis, double inclination, double longitudeAscendingNode)
+
+    {
+    /*
+     * Written 29/1/18 by dh4gan
+     * Given a vector aligned with the x-y plane, rotates it into the orbital plane defined by
+     * argument of periapsis, inclination and longitude of the ascending node
+     *
+     */
+
+
+    Vector3D newvec = vec;
+
+    if(argumentPeriapsis!=0.0)
+   	{
+       newvec.rotateZ(-1 * argumentPeriapsis);
+   	}
+
+       /* Secondly, Rotate around x by -inclination */
+
+       if(inclination !=0.0)
+   	{
+       newvec.rotateX(-1 * inclination);
+   	}
+
+       /* Lastly, Rotate around z by longitudeAscendingNode */
+
+       if(longitudeAscendingNode !=0.0)
+   	{
+       newvec.rotateZ(-1 * longitudeAscendingNode);
+   	}
+
+       return newvec;
+
+    }
+
+
+static Vector3D calcPositionFromOrbit(double G, double totmass,double semiMajorAxis,
+	double eccentricity, double inclination, double trueAnomaly,double longitudeAscendingNode,double argumentPeriapsis)
+    {
+
+    /* Author:dh4gan 1/8/13
+     *
+     * Calculates a position and velocity, given orbital elements (relative to CoM)
+     * Uses separation and true anomaly to calculate position in frame coplanar with orbit
+     * Then uses a series of rotations to give correct inclination and longitudes of periapsis and ascending nodes
+     *
+     */
+
+    double magpos;
+    Vector3D position;
+
+    /* 1. calculate distance from CoM using semimajor axis, eccentricity and true anomaly*/
+
+    magpos = semiMajorAxis * (1.0 - eccentricity * eccentricity) / (1.0
+	    + eccentricity * cos(trueAnomaly));
+
+    /* 2. Calculate position vector in orbital plane */
+
+    position.elements[0] = magpos * cos(trueAnomaly);
+    position.elements[1] = magpos * sin(trueAnomaly);
+    position.elements[2] = 0.0;
+
+
+    // Rotate into the orbital plane
+
+    Vector3D newposition = rotateIntoPlane(position, argumentPeriapsis, inclination, longitudeAscendingNode);
+
+    return newposition;
+
+    }
+
+// End of static methods
+
+
 
 bool Graph::edgeInGraph(Edge* e)
     {
@@ -1301,10 +1406,180 @@ void Graph::createNeighbourNetwork(double range)
 
     }
 
+void Graph::generateGHZ(int &iseed, double &innerRadius, double &outerRadius, double &scale){
+
+
+
+    int success;
+    double eccmax, eccmax2,incmax;
+    double radius, inc, semimaj, ecc, meanAnom, argPer, longAscend;
+    double periastron, apastron, percent, timecounter;
+    string bodyType;
+
+       // All stars have the same mass
+       double totalmass = float(nVertices);
+       double G = Gmkpc; // G in kpc^3 Msol^{-1} kpc^{-2}
+       radius = 1.0;
+       srand(iseed);
+
+       // Assert maximum eccentricity and inclination
+       eccmax = 0.7;
+       incmax = 0.5;
+
+       // Scale surface density distribution for the range of radii involved
+
+       double sigma_0 = (exp(-innerRadius/scale) - exp(-outerRadius/scale));
+
+       // Randomly assign vertex positions
+
+       percent = 0.0;
+       timecounter = 0.0;
+
+       for (int i = 0; i < nVertices; i++)
+   	{
+
+   	percent = percent + 1 / float(nVertices);
+   	if (percent > 0.1)
+   	    {
+   	    timecounter = timecounter + 10.0;
+   	    printf("%.0f %% complete \n", timecounter);
+   	    percent = 0.0;
+   	    }
+
+   	// Assign semimajor axis such that the surface density profile is correct
+
+   	semimaj = exp(-innerRadius/scale) -randomReal()*sigma_0;
+   	semimaj = -log(semimaj)*scale;
+
+   	// This defines maximum eccentricity the body can have to avoid going inside inner radius
+   	eccmax = outerRadius/semimaj - 1.0;
+   	eccmax2 = 1.0 - innerRadius/semimaj;
+
+   	if(eccmax2 < eccmax) eccmax = eccmax2;
+
+   	success = 0;
+
+   	// ensure that eccentricity guarantees orbit entirely within GHZ
+   	while (success == 0)
+   	    {
+   	    ecc = randomReal() *eccmax;
+
+   	    periastron = semimaj * (1.0 - ecc);
+   	    apastron = semimaj * (1.0 + ecc);
+
+   	    success = 1;
+
+   	    if (periastron < innerRadius)
+   		{
+   		success = 0;
+   		}
+
+   	    if (apastron > outerRadius)
+   		{
+   		success = 0;
+   		}
+
+   	    }
+
+   	inc = -incmax + randomReal() * 2.0 * incmax;
+   	meanAnom = randomReal() * 2.0 * pi;
+   	argPer = randomReal() * 2.0 * pi;
+   	longAscend = randomReal() * 2.0 * pi;
+
+   	// Compute Position from this data
+
+   	Vector3D pos = calcPositionFromOrbit(G,totalmass, semimaj,ecc,inc,meanAnom,argPer,longAscend);
+
+   	vertices[i]->setPosition(pos);
+
+   	}
+
+}
+
+
+void Graph:: generateCluster(int &iseed, double &rmax){
+
+    /*
+     * Written 29/1/18 by dh4gan
+     *
+     * Generates a Plummer Sphere
+     * for Vertex positions
+     *
+     */
+
+    double rmin = 0.0;
+    double r =0.0;
+
+    double thetamin = -pi/2;
+    double thetamax = pi/2;
+
+    double phimin = 0.0;
+    double phimax = 2.0*pi;
+    int success = 0;
+
+    double percent = 0.0;
+    double timecounter= 0.0;
+
+    srand(iseed);
+
+    for (int i=0; i<nVertices; i++)
+	{
+
+	percent = percent + 1 / float(nVertices);
+   	if (percent > 0.1)
+   	    {
+   	    timecounter = timecounter + 10.0;
+   	    printf("%.0f %% complete \n", timecounter);
+   	    percent = 0.0;
+   	    }
+
+   	// Randomly sample r from Plummer distribution
+	success = 0;
+	r = 0;
+	while(success==0)
+	    {
+	    r = uniformSample(rmin,rmax);
+
+	    // (Normalised) density profile of a Plummer sphere (1,0.17)
+	    double rho = pow(1 + r*r/(rmax*rmax),-2.5);
+
+	    double randtest = uniformSample(0.0,1);
+	    printf("rho, randtest: %f %f \n ",rho,randtest);
+	    if (rho>randtest)
+		{
+		success=1;
+		}
+	}
+
+	printf("R: %f \n",r);
+	double theta = uniformSample(thetamin,thetamax);
+	double phi = uniformSample(phimin,phimax);
+
+	double x = r*sin(theta)*cos(phi);
+	double y = r*sin(theta)*sin(phi);
+	double z = r*cos(theta);
+
+	Vector3D nextVector(x,y,z);
+	vertices[i]->setPosition(nextVector);
+
+	}
+
+}
+
+
+
+
+
+
 
 void Graph::generateConstantLKParameters(double initialPrey, double initialPred, double preyGrow,
 	double preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0)
     {
+    /*
+     * Written 29/1/18 by dh4gan
+     * Initialises LK systems with globally constant parameters
+     *
+     */
 
 
     for (int i=0; i<nVertices; i++)
@@ -1321,6 +1596,52 @@ void Graph::generateConstantLKParameters(double initialPrey, double initialPred,
 	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,mutate,outflow,velocity,t0);
 
    	}
+
+    }
+
+void Graph::generateUniformLKParameters(double initialPrey, double initialPred,
+	double preyGrowMin, double preyGrowMax,
+	double preyDeathMin, double preyDeathMax,
+	double predGrowMin, double predGrowMax,
+	double predDeathMin, double predDeathMax,
+	double mutateMin, double mutateMax,
+	double outflowMin, double outflowMax,
+	double velocityMin, double velocityMax)
+
+    {
+    /*
+     * Written 29/1/18 by dh4gan
+     * Initialises LK systems with parameters sampled from uniform distribution
+     *
+     */
+
+
+    double t0 = 0.0;
+
+    for (int i=0; i<nVertices; i++)
+      	{
+
+	double preyGrow = uniformSample(preyGrowMin, preyGrowMax);
+	double preyDeath = uniformSample(preyDeathMin, preyDeathMax);
+
+	double predGrow = uniformSample(predGrowMin, predGrowMax);
+	double predDeath = uniformSample(predDeathMin, predDeathMax);
+
+	double mutate = uniformSample(mutateMin, mutateMax);
+	double outflow = uniformSample(outflowMin, outflowMax);
+	double velocity = uniformSample(velocityMin, velocityMax);
+
+	// Only first vertex is given non-zero starting values of predators/prey
+   	if(i!=0)
+   	    {
+   	    initialPrey=0.0;
+   	    initialPred=0.0;
+   	    }
+
+   	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,mutate,outflow,velocity,t0);
+
+      	}
+
 
     }
 

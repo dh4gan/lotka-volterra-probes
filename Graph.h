@@ -18,6 +18,7 @@ class Graph
     {
 public:
     Graph();
+    Graph(int nVertices);
     Graph(vector<Vertex*> vert, vector<Edge*>edge);
     virtual ~Graph();
 
@@ -73,7 +74,8 @@ public:
     void readFromFile(string &inputFileString);
     void writeToFile(string &outputFileString);
 
-    void generateGHZ(double &innerRadius, double &outerRadius, double &scale);
+    void generateGHZ(int &iseed, double &innerRadius, double &outerRadius, double &scale);
+    void generateCluster(int &iseed, double &rmax);
 
     //TODO move setup of positions from main into Graph
 
@@ -89,7 +91,7 @@ public:
 		double outflowMin, double outflowMax,
 		double velocityMin, double velocityMax);
 
-    void generateCluster(double rmax);
+
 
     //TODO move setup of parameters from main into Graph
 

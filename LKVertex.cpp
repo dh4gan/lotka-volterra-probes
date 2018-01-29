@@ -170,6 +170,33 @@ void LKVertex::determineTZero(double time)
 
     }
 
+
+void LKVertex::setLKParameters(double initialPrey, double initialPred,double preyGrow,
+	    double preyDie, double predGrow, double predDeath,
+	    double mutate, double outflow, double vel, double t0)
+
+    {
+
+    /*
+     * Written 29/1/18 by dh4gan
+     * Sets LK system to the following parameters
+     *
+     */
+
+    nPrey = initialPrey;
+    nPredator = initialPred;
+    preyGrowth = preyGrow;
+
+    predatorGrowth = predGrow;
+    predatorDeath = predDeath;
+
+    mutationRate = mutate;
+    outflowRate = outflow;
+    probeVelocity = vel;
+    tzero = t0;
+
+    }
+
 void LKVertex::writeToFile(double time)
     {
     /*
