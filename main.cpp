@@ -44,11 +44,11 @@ int main()
     double rmax = 10.0;
     double range = 10.0;
 
-    Graph fullgraph(nVertices);
+    Graph fullgraph;
 
 
     // Generate a cluster run
-    fullgraph.generateCluster(iseed, rmax);
+    fullgraph.generateCluster(iseed, nVertices,rmax);
     fullgraph.createNeighbourNetwork(range);
 
     string fullGraphFile = "fulltest.graph";
@@ -75,7 +75,6 @@ int main()
     printf("Initialising all LK Systems \n");
     graph.initialiseLKSystems(t,dt);
 
-    tmax = 0.0;
     while(t<tmax)
 	{
 

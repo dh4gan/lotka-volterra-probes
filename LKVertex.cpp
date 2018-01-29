@@ -147,6 +147,9 @@ void LKVertex::initialiseLKSystem(double time, double dt)
     ss << setw(5) << setfill('0') << ident;
     string fileNumber = ss.str();
     string logFileName = "LKSystem_"+fileNumber+".log";
+
+    printf("Initialising output %s \n", logFileName.c_str());
+
     outputFile = fopen(logFileName.c_str(), "w");
 
     }

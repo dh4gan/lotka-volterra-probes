@@ -22,6 +22,7 @@ public:
     Graph(vector<Vertex*> vert, vector<Edge*>edge);
     virtual ~Graph();
 
+    void clearGraph();
     int getNVertices(){return nVertices;}
 
     vector<Vertex*> getVertices(){return vertices;}
@@ -74,10 +75,10 @@ public:
     void readFromFile(string &inputFileString);
     void writeToFile(string &outputFileString);
 
-    void generateGHZ(int &iseed, double &innerRadius, double &outerRadius, double &scale);
-    void generateCluster(int &iseed, double &rmax);
+    void generateGHZ(int &iseed, int &nVert, double &innerRadius, double &outerRadius, double &scale);
+    void generateCluster(int &iseed, int &nVert, double &rmax);
 
-    //TODO move setup of positions from main into Graph
+    //TODO Must insert LKVertex, not Vertex Objects into Graph! Do in construction methods
 
     void generateConstantLKParameters(double initialPrey, double initialPred, double preyGrow,
 	double preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0);
@@ -90,10 +91,6 @@ public:
 		double mutateMin, double mutateMax,
 		double outflowMin, double outflowMax,
 		double velocityMin, double velocityMax);
-
-
-
-    //TODO move setup of parameters from main into Graph
 
 
     void clearAllEdges();

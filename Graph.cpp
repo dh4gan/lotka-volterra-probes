@@ -7,6 +7,7 @@
 
 #include "Graph.h"
 #include "Constants.h"
+#include "LKVertex.h"
 #include <string>
 #include <algorithm>
 #include <stdlib.h>
@@ -34,7 +35,7 @@ Graph::Graph(int nVert)
 
     for (int i=0; i< nVertices; i++)
 	{
-	vertices.push_back(new Vertex());
+	vertices.push_back(new Vertex(i));
 	}
 
     }
@@ -67,6 +68,26 @@ Graph::~Graph()
      delete (edges[iEdge]);
      }
      edges.clear();*/
+
+    }
+
+void Graph::clearGraph()
+
+    {
+    /*
+     * Written 29/1/18 by dh4gan
+     * Resets all Graph variables to zero
+     *
+     */
+
+    clearComponentData();
+    vertices.clear();
+    edges.clear();
+    nEdges.clear();
+
+    nVertices = 0;
+    nTotalEdges = 0;
+    nConnectedComponents = 0;
 
     }
 
@@ -715,14 +736,16 @@ Graph Graph::minimumSpanningForest()
     // Get connected components
     findConnectedComponents();
 
-    //printf("Forest has %i components \n", nConnectedComponents);
+
+    printf("Computing Minimum Spanning Forest with %i components \n", nConnectedComponents);
 
     for (int iVertex = 0; iVertex < nConnectedComponents; iVertex++)
 	{
 	//printf("Calculating minimum spanning tree for component %i \n", iVertex+1);
 
+	Vertex* icomp = componentCentres[iVertex];
 	// For each vertex that founds a connected component, calculate MST
-	tree = minimumSpanningTree(componentCentres[iVertex]);
+	tree = minimumSpanningTree(icomp);
 
 	/*printf("Tree calculated for %p: nVertices %i, nEdges %i \n",
 	 componentCentres[iVertex], tree.getNVertices(),
@@ -1374,12 +1397,13 @@ void Graph::createNeighbourNetwork(double range)
 
     // Now begin adding edges based on separation
 
+    printf("Creating Nearest Neighbour Network, range: %f \n",range);
+
     for (int i = 0; i < nVertices; i++)
 	{
 
 	for (int j = i+1; j < nVertices; j++)
 	    {
-	    printf("%i %i \n",i,j);
 	    distance = vertices[i]->calcVertexSeparation(vertices[j]);
 
 	    // If within range, connect the vertices
@@ -1406,7 +1430,7 @@ void Graph::createNeighbourNetwork(double range)
 
     }
 
-void Graph::generateGHZ(int &iseed, double &innerRadius, double &outerRadius, double &scale){
+void Graph::generateGHZ(int &iseed, int &nVertices, double &innerRadius, double &outerRadius, double &scale){
 
 
 
@@ -1490,14 +1514,14 @@ void Graph::generateGHZ(int &iseed, double &innerRadius, double &outerRadius, do
 
    	Vector3D pos = calcPositionFromOrbit(G,totalmass, semimaj,ecc,inc,meanAnom,argPer,longAscend);
 
-   	vertices[i]->setPosition(pos);
+   	vertices.push_back(new LKVertex(i+1,pos));
 
    	}
 
 }
 
 
-void Graph:: generateCluster(int &iseed, double &rmax){
+void Graph:: generateCluster(int &iseed, int &nVert, double &rmax){
 
     /*
      * Written 29/1/18 by dh4gan
@@ -1506,6 +1530,10 @@ void Graph:: generateCluster(int &iseed, double &rmax){
      * for Vertex positions
      *
      */
+
+    clearGraph();
+
+    nVertices = nVert;
 
     double rmin = 0.0;
     double r =0.0;
@@ -1522,6 +1550,7 @@ void Graph:: generateCluster(int &iseed, double &rmax){
 
     srand(iseed);
 
+    printf("Generating Plummer Sphere of Vertices, Rmax: %f \n",rmax);
     for (int i=0; i<nVertices; i++)
 	{
 
@@ -1544,14 +1573,12 @@ void Graph:: generateCluster(int &iseed, double &rmax){
 	    double rho = pow(1 + r*r/(rmax*rmax),-2.5);
 
 	    double randtest = uniformSample(0.0,1);
-	    printf("rho, randtest: %f %f \n ",rho,randtest);
 	    if (rho>randtest)
 		{
 		success=1;
 		}
 	}
 
-	printf("R: %f \n",r);
 	double theta = uniformSample(thetamin,thetamax);
 	double phi = uniformSample(phimin,phimax);
 
@@ -1559,8 +1586,8 @@ void Graph:: generateCluster(int &iseed, double &rmax){
 	double y = r*sin(theta)*sin(phi);
 	double z = r*cos(theta);
 
-	Vector3D nextVector(x,y,z);
-	vertices[i]->setPosition(nextVector);
+	Vector3D pos(x,y,z);
+	vertices.push_back(new LKVertex(i+1,pos));
 
 	}
 
@@ -1670,7 +1697,6 @@ void Graph::updateLKSystems(double t)
      * Written 29/9/17 by dh4gan
      * drives integration of LK equations for LKVertex objects
      */
-
 
     // Compute outward fluxes of all vertices
     for (int i=0; i<nVertices; i++)
