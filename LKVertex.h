@@ -6,7 +6,7 @@
  */
 
 #include "Vertex.h"
-
+#include <stdio.h>
 #ifndef LKVERTEX_H_
 #define LKVERTEX_H_
 

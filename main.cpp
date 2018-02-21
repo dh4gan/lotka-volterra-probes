@@ -12,44 +12,39 @@
 #include "Graph.h"
 #include "Constants.h"
 #include <iostream>
+#include "parFile.h"
+
 using namespace std;
 
 int main()
     {
 
-    // Set up single LK System
-
-    double preyGrow = 0.6666;
-    double preyDeath = 1.333;
-
-    double predGrow = 1.0;
-    double predDeath = 1.0;
-
-    double mutate = 0.0;
-    double outflow = 0.1;
-    double velocity = 0.5;
-    double t0 = 0.0;
-
-    double initialPrey = 1.8;
-    double initialPred = 1.8;
-
-    double dt =0.001;
-
-    double tmax = 100.0;
     double t = 0.0;
+    double t0 = t;
+    double dt = 1.0e-3;
 
-    int nVertices = 100;
+    // Read in parameter file
 
-    int iseed = -37;
-    double rmax = 10.0;
-    double range = 10.0;
+    parFile input;
+
+    input.readParams();
+
+    // Generate graph
 
     Graph fullgraph;
 
+    // Generate either a cluster run
 
-    // Generate a cluster run
-    fullgraph.generateCluster(iseed, nVertices,rmax);
-    fullgraph.createNeighbourNetwork(range);
+    if(input.icChoice==1)
+      {
+	fullgraph.generateCluster(input.iseed, input.nVertices,input.rmax);
+      }
+    else
+      {
+	fullgraph.generateGHZ(input.iseed, input.nVertices, input.rmin, input.rmax, input.scaleLength);
+      }
+
+    fullgraph.createNeighbourNetwork(input.range);
 
     string fullGraphFile = "fulltest.graph";
     fullgraph.writeToFile(fullGraphFile);
@@ -59,8 +54,32 @@ int main()
 
     // Generate parameters for LK systems
 
-    graph.generateConstantLKParameters(initialPrey, initialPred, preyGrow,
-		preyDeath, predGrow, predDeath, mutate, outflow, velocity, t0);
+
+    if(input.parChoice=="uniform")
+      {
+
+	graph.generateUniformLKParameters(input.initialPrey, input.initialPred,
+	                          	input.preyGrow1, input.preyGrow2,
+	                          	input.preyDeath1, input.preyDeath2,
+	                          	input.predGrow1, input.predGrow2,
+	                          	input.predDeath1, input.predDeath2,
+	                          	input.mutationRate, input.mutationRate,
+	                          	input.outflowRate, input.outflowRate,
+	                          	input.velocity, input.velocity);
+
+      }
+    else if(input.parChoice=="gaussian")
+      {
+
+// TODO - write gaussian sampling of LK parameters
+      }
+    else
+      {
+	graph.generateConstantLKParameters(input.initialPrey, input.initialPred, input.preyGrow1,
+			input.preyDeath1, input.predGrow1, input.predDeath1, input.mutationRate, input.outflowRate, input.velocity, t0);
+
+      }
+
 
 
 
@@ -75,7 +94,7 @@ int main()
     printf("Initialising all LK Systems \n");
     graph.initialiseLKSystems(t,dt);
 
-    while(t<tmax)
+    while(t<input.tmax)
 	{
 
 	printf("Time: %f \n",t);

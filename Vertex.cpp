@@ -6,6 +6,7 @@
  */
 
 #include "Vertex.h"
+#include <algorithm>
 
 
 Vertex::Vertex()
