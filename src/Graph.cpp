@@ -354,7 +354,7 @@ Vertex* Graph::findNearestVertex(Vector3D location)
 
 int Graph::removeIsolatedVertices()
     {
-    int iVertex, j;
+    int iVertex;
     vector<bool> isolated(nVertices, false);
 
     int nIsolated = 0;
@@ -373,7 +373,6 @@ int Graph::removeIsolatedVertices()
     // Remove all isolated Vertices
     for (iVertex = nVertices - 1; iVertex >= 0; iVertex--)
 	{
-	j = nVertices - iVertex;
 	if (isolated[iVertex])
 	    {
 	    removeVertex(iVertex);
@@ -403,8 +402,10 @@ void Graph::addGraph(Graph other)
     vector<Vertex*> otherVertices = other.getVertices();
     vector<Edge*> otherEdges = other.getEdges();
 
+    int nVertexOther = otherVertices.size();
+    int nEdgeOther = otherEdges.size();
     // Add vertices (if they're not already present)
-    for (int iVertex = 0; iVertex < otherVertices.size(); iVertex++)
+    for (int iVertex = 0; iVertex < nVertexOther; iVertex++)
 	{
 	v = otherVertices[iVertex];
 	if (not (v->inVector(vertices)))
@@ -415,7 +416,7 @@ void Graph::addGraph(Graph other)
 
     // Add edges (if they're not already present)
 
-    for (int iEdge = 0; iEdge < otherEdges.size(); iEdge++)
+    for (int iEdge = 0; iEdge < nEdgeOther; iEdge++)
 	{
 	e = otherEdges[iEdge];
 	if (not (e->inVector(edges)))
@@ -563,8 +564,10 @@ void Graph::findConnectedComponents(Vertex* first)
 	    connectedToVertex =
 		    connectedVertices[iVertex]->getConnectedVertices();
 
+	    int nConnectedToVertex = connectedToVertex.size();
+
 	    // If they're not already present and not in another component, add them to vector
-	    for (int jVertex = 0; jVertex < connectedToVertex.size(); jVertex++)
+	    for (int jVertex = 0; jVertex < nConnectedToVertex; jVertex++)
 		{
 		v = connectedToVertex[jVertex];
 
@@ -685,8 +688,9 @@ Graph Graph::minimumSpanningTree(Vertex* start)
 	    v_edges = v->getEdges();
 	    v_vertices = v->getConnectedVertices();
 
+	    int nv_edges = v_edges.size();
 	    // Find edge with minimum weight
-	    for (iEdge = 0; iEdge < v_edges.size(); iEdge++)
+	    for (iEdge = 0; iEdge < nv_edges; iEdge++)
 		{
 
 		// Take an edge which connects to this vertex
@@ -993,7 +997,6 @@ Graph Graph::shortestPath(Vertex* start, Vertex* destination, double &distance)
     vector<Vertex*> neighbours, pathVertices, pathVertexCopies;
     vector<Edge*> neighbourEdges, pathEdges;
     Vertex* neighbourNode, *currentNode, *nextNode;
-    int iNext;
     double goalDistance, minWeight, newWeight;
 
     // Check that both Vertices are in the same connected component
@@ -1157,7 +1160,6 @@ Graph Graph::shortestPath(Vertex* start, Vertex* destination, double &distance)
 		nextNode = neighbourNode;
 
 		minWeight = newWeight;
-		iNext = iEdge;
 		}
 
 	    if (nextNode)
@@ -1205,7 +1207,8 @@ Graph Graph::shortestPath(Vertex* start, Vertex* destination, double &distance)
     // Now construct graph from the list of path vertices
     // We construct a brand new graph, so create copies of vertices with the same positions
 
-    for (int iVertex = 0; iVertex < pathVertices.size(); iVertex++)
+    int nPathVertices = pathVertices.size();
+    for (int iVertex = 0; iVertex < nPathVertices; iVertex++)
 	{
 	pathVertexCopies.push_back(
 		new Vertex(pathVertices[iVertex]->getPosition()));
@@ -1213,7 +1216,7 @@ Graph Graph::shortestPath(Vertex* start, Vertex* destination, double &distance)
 
     // vertices vector is in the correct order, so Edge construction is straightforward
 
-    for (int iVertex = 1; iVertex < pathVertices.size(); iVertex++)
+    for (int iVertex = 1; iVertex < nPathVertices; iVertex++)
 	{
 
 	// Create new Edge based on two adjacent vertices in list
