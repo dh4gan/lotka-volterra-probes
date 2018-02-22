@@ -22,6 +22,8 @@ int main(int argc, char* argv[])
 
     double t = 0.0;
     double t0 = t;
+    double tnext = 0.0;
+    bool writeSnapshot;
 
     // Display header
 
@@ -33,7 +35,7 @@ int main(int argc, char* argv[])
     printf("*********************************************** \n");
     printf("  \n");
 
-    // Check if parameter file in args
+    // Either read parameter filename from argv[] or command line
 
     string fileString;
 
@@ -44,9 +46,7 @@ int main(int argc, char* argv[])
     	}
         else
     	{
-         printf("Reading in the Users body data \n ");
          cout << "What is the input file? " << endl;
-
          getline(cin, fileString);
 
     	}
@@ -56,6 +56,8 @@ int main(int argc, char* argv[])
     parFile input(fileString);
     input.readParams();
 
+
+    // Write parameter details to screen and store in file
     input.writeParamsToScreen();
     input.writeParamsToFile();
 
@@ -76,18 +78,16 @@ int main(int argc, char* argv[])
 
     fullgraph.createNeighbourNetwork(input.range);
 
-    string fullGraphFile = "fulltest.graph";
+    string fullGraphFile = "stars.graph";
     fullgraph.writeToFile(fullGraphFile);
 
-    //Use only minimum spanning Forest for computation
+    // Reduce graph to minimum spanning Forest for computation
     Graph graph = fullgraph.minimumSpanningForest();
 
-    // Generate parameters for LK systems
-
+    // Generate parameters for all Lotka-Volterra systems
 
     if(input.parChoice=="uniform")
       {
-
 	graph.generateUniformLKParameters(input.initialPrey, input.initialPred,
 	                          	input.preyGrow1, input.preyGrow2,
 	                          	input.preyDeath1, input.preyDeath2,
@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
 
 
     // Write stellar network graph to file
-    string graphFile = "test.graph";
+    string graphFile = "stars.MSF.graph";
     graph.writeToFile(graphFile);
 
     // Begin Lotka-Volterra calculation
@@ -131,8 +131,14 @@ int main(int argc, char* argv[])
     while(t<input.tmax)
 	{
 
+	tnext = tnext +input.dt;
+
+	if(tnext<input.tsnap)
+	  {
+	    writeSnapshot = true;
+	  }
 	printf("Time: %f \n",t);
-	graph.updateLKSystems(t);
+	graph.updateLKSystems(t,writeSnapshot);
 
 	t = t+input.dt;
 	}

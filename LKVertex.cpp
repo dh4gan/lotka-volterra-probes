@@ -221,7 +221,7 @@ void LKVertex::writeToFile(double time)
 	fprintf(outputFile,formatString.c_str(), time, nPrey, nPredator, ratePrey, ratePredator, preyOut, predatorOut);
     }
 
-void LKVertex::updateLKSystem(double t)
+void LKVertex::updateLKSystem(double t,bool writeSnapshot)
     {
     /*
      * Written 28/9/17 by dh4gan
@@ -242,7 +242,9 @@ void LKVertex::updateLKSystem(double t)
     if(nPrey < 0.0) nPrey = 0.0;
     if(nPredator < 0.0) nPredator = 0.0;
     determineTZero(t);
-    writeToFile(t);
+
+    // Determine if a snapshot needs to be written
+    if(writeSnapshot) {writeToFile(t);}
 
     }
 

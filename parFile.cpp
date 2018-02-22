@@ -21,6 +21,7 @@ parFile::parFile()
   	initialPred=0.0;
   	tmax=0.0;
   	dt = 0.0;
+  	tsnap = 0.0;
 
   	icChoice= "GHZ"; // 0 = GHZ, 1= cluster
   	parChoice= "constant"; // "constant" = constant parameters, "uniform" = random sampling, "gaussian" =Gaussian sampling
@@ -95,6 +96,7 @@ void parFile::readParams()
 
   	  if(par== "tmax"){iss >> tmax;}
   	  if(par== "dt"){iss >> dt;}
+  	  if(par=="tsnap"){iss >> tsnap;}
 
   	  if(par== "iseed"){iss>>iseed;}
 
@@ -154,6 +156,7 @@ void parFile::writeParamsToFile()
 
   fprintf(outputFile,"Maximum Time: %f Myr \n",tmax);
   fprintf(outputFile,"Timestep: %f Myr \n",dt);
+  fprintf(outputFile,"Snapshot Interval: %f Myr \n",tsnap);
 
   fprintf(outputFile, "%s \n",divider.c_str());
   fprintf(outputFile, "Lotka Volterra Parameters\n");
@@ -241,6 +244,7 @@ void parFile::writeParamsToScreen()
 
    printf("Maximum Time: %f Myr \n",tmax);
    printf("Timestep: %f Myr \n",dt);
+   printf("Snapshot Interval: %f Myr \n",tsnap);
 
    printf("%s \n",divider.c_str());
    printf("Lotka Volterra Parameters\n");

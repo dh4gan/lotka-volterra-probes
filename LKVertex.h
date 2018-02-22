@@ -72,7 +72,7 @@ public:
 	    double mutate, double outflow, double vel, double t0);
     void determineTZero(double time);
     void computeOutwardFlux(double t);
-    void updateLKSystem(double t);
+    void updateLKSystem(double t,bool writeSnapshot);
     void writeToFile(double time);
 
 protected:

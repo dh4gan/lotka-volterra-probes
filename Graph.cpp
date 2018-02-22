@@ -1776,7 +1776,7 @@ void Graph::initialiseLKSystems(double time, double dt)
 
     }
 
-void Graph::updateLKSystems(double t)
+void Graph::updateLKSystems(double t,bool writeSnapshot)
 
     {
     /*
@@ -1794,7 +1794,7 @@ void Graph::updateLKSystems(double t)
     // Now update system
     for (int i=0; i<nVertices; i++)
 	{
-	vertices[i]->updateLKSystem(t);
+	vertices[i]->updateLKSystem(t,writeSnapshot);
 	}
 
     }

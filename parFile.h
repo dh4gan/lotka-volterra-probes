@@ -24,13 +24,13 @@ public:
 	parFile(string name);
 
 	string parFileName;
-
 	int nVertices;
 	int iseed;
 	double initialPrey;
 	double initialPred;
 	double tmax;
 	double dt;
+	double tsnap;
 
 	string icChoice; // "GHZ" or "cluster"
 	string parChoice; // "constant" = constant parameters, "uniform" = random sampling, "gaussian" =Gaussian sampling

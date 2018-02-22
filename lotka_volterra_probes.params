@@ -3,12 +3,12 @@ Setup file for lotka_volterra_probes program
 Domain Parameters
 -----------------------------------------------
 nVertices 	100 		number of stars to simulate
-range 		5.0		Maximum connection distance between stars (kpc)
+range 		10.0		Maximum connection distance between stars (kpc)
 icChoice 	GHZ		Stellar Configuration (GHZ,cluster)
 rmin 		1.0		Minimum Radius (kpc)
 rmax 		10.0		Maximum Radius (kpc)
 scaleLength 	5.0		Scale Length (for GHZ runs)
-tmax 		100.0		Maximum Time for Simulation (Myr)
+tmax 		1.0		Maximum Time for Simulation (Myr)
 dt   		0.01		Simulation Timestep (Myr)
 iseed		-37		Random number seed
 -------------------------------------
