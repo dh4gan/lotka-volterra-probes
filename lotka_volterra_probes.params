@@ -1,0 +1,29 @@
+Setup file for lotka_volterra_probes program
+--------------------------------------------
+Domain Parameters
+-----------------------------------------------
+nVertices 	100 		number of stars to simulate
+range 		5.0		Maximum connection distance between stars (kpc)
+icChoice 	GHZ		Stellar Configuration (GHZ,cluster)
+rmin 		1.0		Minimum Radius (kpc)
+rmax 		10.0		Maximum Radius (kpc)
+scaleLength 	5.0		Scale Length (for GHZ runs)
+tmax 		100.0		Maximum Time for Simulation (Myr)
+dt   		0.01		Simulation Timestep (Myr)
+iseed		-37		Random number seed
+-------------------------------------
+Lotka Volterra Model Parameters
+Two values for each parameter: depending on setup choice either
+1) constant: <constant> <unused>
+2) uniform : <minimum> <maximum>
+3) gaussian: <mean> <standard deviation>
+-------------------------------------
+parChoice 	constant	Setup choice for model (constant, uniform, Gaussian)
+initialPrey	1.8             Initial Prey Count (at star 0)
+initialPred	1.8             Initial Predator Count (at star 0)
+preyGrow	1.0	1.1	Prey Growth Rate
+preyDeath	1.0	1.1	Prey Death Rate
+predGrow	1.01	1.1	Predator Growth Rate
+predDeath	1.0	1.1	Predator Death Rate
+
+
