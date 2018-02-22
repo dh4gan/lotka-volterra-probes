@@ -1432,6 +1432,7 @@ void Graph::createNeighbourNetwork(double range)
     // Now begin adding edges based on separation
 
     printf("Creating Nearest Neighbour Network, range: %f \n",range);
+    printf("Vertices: %i \n",nVertices);
 
     for (int i = 0; i < nVertices; i++)
 	{
@@ -1439,7 +1440,7 @@ void Graph::createNeighbourNetwork(double range)
 	for (int j = i+1; j < nVertices; j++)
 	    {
 	    distance = vertices[i]->calcVertexSeparation(vertices[j]);
-
+	    printf("distance %f, range %f \n",distance,range);
 	    // If within range, connect the vertices
 	    if (distance < range)
 		{
@@ -1462,6 +1463,10 @@ void Graph::createNeighbourNetwork(double range)
 
 	}
 
+    printf("Total Number of Edges: %i \n",nTotalEdges);
+    findConnectedComponents();
+
+
     }
 
 void Graph::generateGHZ(int &iseed, int &nVertices, double &innerRadius, double &outerRadius, double &scale){
@@ -1470,15 +1475,18 @@ void Graph::generateGHZ(int &iseed, int &nVertices, double &innerRadius, double 
 
     int success;
     double eccmax, eccmax2,incmax;
-    double radius, inc, semimaj, ecc, meanAnom, argPer, longAscend;
+    double inc, semimaj, ecc, meanAnom, argPer, longAscend;
     double periastron, apastron, percent, timecounter;
     string bodyType;
 
-       // All stars have the same mass
-       double totalmass = float(nVertices);
-       double G = Gmkpc; // G in kpc^3 Msol^{-1} kpc^{-2}
-       radius = 1.0;
-       srand(iseed);
+    printf("Generating GHZ initial conditions for %i stars\n",nVertices);
+    printf("Inner Radius: %f, Outer Radius: %f, scale length: %f \n",innerRadius,outerRadius, scale);
+
+    // All stars have the same mass
+    double totalmass = float(nVertices);
+    double G = Gmkpc; // G in kpc^3 Msol^{-1} kpc^{-2}
+
+    srand(iseed);
 
        // Assert maximum eccentricity and inclination
        eccmax = 0.7;
@@ -1548,7 +1556,7 @@ void Graph::generateGHZ(int &iseed, int &nVertices, double &innerRadius, double 
 
    	Vector3D pos = calcPositionFromOrbit(G,totalmass, semimaj,ecc,inc,meanAnom,argPer,longAscend);
 
-   	vertices.push_back(new LKVertex(i+1,pos));
+   	addVertex(new LKVertex(i+1,pos));
 
    	}
 
@@ -1584,7 +1592,7 @@ void Graph:: generateCluster(int &iseed, int &nVert, double &rmax){
 
     srand(iseed);
 
-    printf("Generating Plummer Sphere of Vertices, Rmax: %f \n",rmax);
+    printf("Generating Plummer Sphere Initial Conditions, Rmax: %f \n",rmax);
     for (int i=0; i<nVertices; i++)
 	{
 
@@ -1621,7 +1629,7 @@ void Graph:: generateCluster(int &iseed, int &nVert, double &rmax){
 	double z = r*cos(theta);
 
 	Vector3D pos(x,y,z);
-	vertices.push_back(new LKVertex(i+1,pos));
+	addVertex(new LKVertex(i+1,pos));
 
 	}
 

@@ -11,11 +11,12 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <string.h>
 
 #include <fstream>
 #include <sstream>
-//using namespace std;
+using namespace std;
 
 class parFile {
 public:
@@ -29,8 +30,9 @@ public:
 	double initialPrey;
 	double initialPred;
 	double tmax;
+	double dt;
 
-	int icChoice; // 0 = GHZ, 1= cluster
+	string icChoice; // "GHZ" or "cluster"
 	string parChoice; // "constant" = constant parameters, "uniform" = random sampling, "gaussian" =Gaussian sampling
 
 	double rmin;
@@ -55,15 +57,19 @@ public:
 	double preyDeath1;
 	double preyDeath2;
 
-	double mutationRate;
-	double outflowRate;
-	double velocity;
+	double mutationRate1;
+	double mutationRate2;
+
+	double outflowRate1;
+	double outflowRate2;
+
+	double velocity1;
+	double velocity2;
 
 
-
-
-
-	void readParams(); // TODO - write readParams file
+	void readParams();
+	void writeParamsToFile();
+	void writeParamsToScreen();
 
 };
 
