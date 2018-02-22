@@ -105,6 +105,40 @@ static double uniformSample(double min, double max)
     return min + (max-min)*randomReal();
     }
 
+
+static double gaussianSample(double mu, double sigma)
+    {
+  /*
+   * Written 22/2/18 by dh4gan
+   * samples a Gaussian using the Box-Muller method
+   *
+   */
+
+
+    double w=10.0;
+    double y1,y2;
+
+    double min = 0.0;
+    double max = 0.0;
+
+    while(w>1.0)
+      {
+	y1 = uniformSample(min,max);
+	y2 = uniformSample(min,max);
+
+	w = y1*y1 + y2*y2;
+
+      }
+
+    // Get Gaussian N(0,1)
+    double x = y1*sqrt(-log(w)/w);
+
+    // Convert to N(mu, sigma^2)
+    x = x*sigma + mu;
+
+    return x;
+    }
+
 static Vector3D rotateIntoPlane(Vector3D vec, double argumentPeriapsis, double inclination, double longitudeAscendingNode)
 
     {
@@ -1672,6 +1706,50 @@ void Graph::generateUniformLKParameters(double initialPrey, double initialPred,
 
     }
 
+void Graph::generateGaussianLKParameters(double initialPrey, double initialPred,
+	double meanPreyGrow, double sdPreyGrow,
+	double meanPreyDeath, double sdPreyDeath,
+	double meanPredGrow, double sdPredGrow,
+	double meanPredDeath, double sdPredDeath,
+	double meanMutate, double sdMutate,
+	double meanOutflow, double sdOutflow,
+	double meanVelocity, double sdVelocity)
+
+    {
+    /*
+     * Written 29/1/18 by dh4gan
+     * Initialises LK systems with parameters sampled from Gaussian distribution
+     *
+     */
+
+    double t0 = 0.0;
+
+    for (int i=0; i<nVertices; i++)
+      	{
+
+	double preyGrow = gaussianSample(meanPreyGrow, sdPreyGrow);
+	double preyDeath = gaussianSample(meanPreyDeath, sdPreyDeath);
+
+	double predGrow = gaussianSample(meanPredGrow, sdPredGrow);
+	double predDeath = gaussianSample(meanPredDeath, sdPredDeath);
+
+	double mutate = gaussianSample(meanMutate, sdMutate);
+	double outflow = gaussianSample(meanOutflow, sdOutflow);
+	double velocity = gaussianSample(meanVelocity, sdVelocity);
+
+	// Only first vertex is given non-zero starting values of predators/prey
+   	if(i!=0)
+   	    {
+   	    initialPrey=0.0;
+   	    initialPred=0.0;
+   	    }
+
+   	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,mutate,outflow,velocity,t0);
+
+      	}
+
+
+    }
 
 
 void Graph::initialiseLKSystems(double time, double dt)

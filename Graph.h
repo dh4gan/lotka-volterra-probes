@@ -83,6 +83,15 @@ public:
     void generateConstantLKParameters(double initialPrey, double initialPred, double preyGrow,
 	double preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0);
 
+    void generateGaussianLKParameters(double initialPrey, double initialPred,
+    	double meanPreyGrow, double sdPreyGrow,
+    	double meanPreyDeath, double sdPreyDeath,
+    	double meanPredGrow, double sdPredGrow,
+    	double meanPredDeath, double sdPredDeath,
+    	double meanMutate, double sdMutate,
+    	double meanOutflow, double sdOutflow,
+    	double meanVelocity, double sdVelocity);
+
     void generateUniformLKParameters(double initialPrey, double initialPred,
 		double preyGrowMin, double preyGrowMax,
 		double preyDeathMin, double preyDeathMax,
