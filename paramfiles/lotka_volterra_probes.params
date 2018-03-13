@@ -7,9 +7,10 @@ range 		10.0		Maximum connection distance between stars (kpc)
 icChoice 	GHZ		Stellar Configuration (GHZ,cluster)
 rmin 		1.0		Minimum Radius (kpc)
 rmax 		10.0		Maximum Radius (kpc)
-scaleLength 	5.0		Scale Length (for GHZ runs)
-tmax 		1.0		Maximum Time for Simulation (Myr)
-dt   		0.01		Simulation Timestep (Myr)
+scaleLength 	3.5		Scale Length (for GHZ runs)
+tmax 		50.0		Maximum Time for Simulation (Myr)
+dt   		0.001		Simulation Timestep (Myr)
+tsnap		1.0		Snapshot Interval (Myr)
 iseed		-37		Random number seed
 -------------------------------------
 Lotka Volterra Model Parameters
@@ -25,5 +26,7 @@ preyGrow	1.0	1.1	Prey Growth Rate
 preyDeath	1.0	1.1	Prey Death Rate
 predGrow	1.01	1.1	Predator Growth Rate
 predDeath	1.0	1.1	Predator Death Rate
-
+mutationRate	0.0	0.0	Prey -> Predator Mutation Rate
+outflowRate	0.1	0.1	Prey/Predator Outflow Rate
+velocity	0.1	0.1	Prey/Predator Velocity (fraction of lightspeed)
 

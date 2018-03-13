@@ -112,8 +112,25 @@ void parFile::readParams()
 
   	  if(par=="predGrow"){ iss>>predGrow1 >> predGrow2;}
   	  if(par=="predDeath"){ iss>>predDeath1 >> predDeath2;}
+  	  if(par=="mutationRate"){ iss>>mutationRate1 >> mutationRate2;}
+  	  if(par=="outflowRate") { iss>>outflowRate1 >> outflowRate2;}
+  	  if(par=="velocity"){ iss>>velocity1 >> velocity2;}
+
+  	  if(velocity1>1.0)
+  	    {
+  	      printf("WARNING: attempting to set probe velocity > c; automatically fixing max=c \n");
+  	      velocity1 = 1.0;
+  	    }
 
 
+  	  if(velocity2>1.0)
+  	    {
+  	      printf("WARNING: attempting to set probe velocity > c; automatically fixing max=c \n");
+  	      velocity2 = 1.0;
+  	    }
+
+  	  velocity1 = velocity1*c_kpc_Myr;
+  	  velocity2 = velocity2*c_kpc_Myr;
 
   	}
 }

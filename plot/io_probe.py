@@ -63,6 +63,7 @@ def read_logfiles():
     alldata = []
     
     for filename in logfiles:
+        print "Reading file ",filename
         alldata.append(read_logfile(filename))
         
     return alldata
@@ -96,7 +97,7 @@ def read_graph_file(filename):
 
 
 def plot_graph_population(index,graphfile,outputfile=None, data=None,  markerscale=0.1,vertexID=None,vertexPositions=None,edges=None):
-    '''Plots the graph, with each star's population represented as a pie chart'''
+    '''Plots the graph at time index `index', with each star's population represented as a pie chart'''
     
     if(vertexID==None):
         vertexID, vertexPositions,edges = read_graph_file(graphfile)

@@ -8,6 +8,7 @@ import filefinder as ff
 
 graphfile = ff.find_local_input_files("*.graph")
 
-interval = input("What is the snapshot interval?")
+#interval = input("What is the snapshot interval?")
+interval = 1
 
 io.plot_graph_population_movie(graphfile,interval=interval)
