@@ -124,6 +124,7 @@ int main(int argc, char* argv[])
     // Begin Lotka-Volterra calculation
 
     t = 0;
+    tnext = 0.0;
 
     printf("Initialising all LK Systems \n");
     graph.initialiseLKSystems(t,input.dt);
@@ -131,16 +132,20 @@ int main(int argc, char* argv[])
     while(t<input.tmax)
 	{
 
-	tnext = tnext +input.dt;
 
-	if(tnext<input.tsnap)
+
+	graph.updateLKSystems(t);
+
+	if(tnext>input.tsnap)
 	  {
-	    writeSnapshot = true;
+	    printf("Time: %f \n",t);
+	    graph.writeLKSnapshots(t);
+	    tnext = 0.0;
 	  }
-	printf("Time: %f \n",t);
-	graph.updateLKSystems(t,writeSnapshot);
 
 	t = t+input.dt;
+	tnext = tnext +input.dt;
+
 	}
 
 

@@ -95,6 +95,41 @@ def read_graph_file(filename):
     return vertexID, vertexPositions, edges
 
 
+def plot_graph(graphfile,outputfile=None,markerscale=0.1,vertexID=None,vertexPositions=None,edges=None):
+    
+    if(vertexID==None):
+        vertexID, vertexPositions,edges = read_graph_file(graphfile)
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    
+    ax.set_xlim((-1.5*np.amax(vertexPositions[:,0]),1.5*np.amax(vertexPositions[:,0])))
+    ax.set_ylim((-1.5*np.amax(vertexPositions[:,1]),1.5*np.amax(vertexPositions[:,1])))
+    
+    # Plot edges first
+        
+        
+    for i in range(len(edges)):
+        
+        for j in range(len(vertexID)):
+            
+            # If edge exists, draw line connecting vertices
+            if(edges[i,j]>0.0):
+        
+                xdata = [vertexPositions[i,0],vertexPositions[j,0]]
+                ydata = [vertexPositions[i,1],vertexPositions[j,1]]
+                ax.plot(xdata,ydata, color='black',zorder=-1)
+    
+    
+    ax.scatter(vertexPositions[:,0],vertexPositions[:,1],color='black')        
+    
+    if(outputfile==None):
+        plt.show()
+    else:
+        fig.savefig(outputfile)
+        
+    plt.close()
+
 
 def plot_graph_population(index,graphfile,outputfile=None, data=None,  markerscale=0.1,vertexID=None,vertexPositions=None,edges=None):
     '''Plots the graph at time index `index', with each star's population represented as a pie chart'''

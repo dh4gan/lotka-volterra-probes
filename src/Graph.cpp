@@ -1429,6 +1429,7 @@ void Graph::createNeighbourNetwork(double range)
      */
 
     double distance;
+    double percent,timecounter;
     // Wipe previous edge catalogues
     clearAllEdges();
 
@@ -1440,10 +1441,18 @@ void Graph::createNeighbourNetwork(double range)
     for (int i = 0; i < nVertices; i++)
 	{
 
+	percent = percent + 100.0 / float(nVertices);
+	   	if (percent > 10.0)
+	   	    {
+	   	    timecounter = timecounter + 10.0;
+	   	    printf("%.0f %% complete \n", timecounter);
+	   	    percent = 0.0;
+	   	    }
+
 	for (int j = i+1; j < nVertices; j++)
 	    {
 	    distance = vertices[i]->calcVertexSeparation(vertices[j]);
-	    printf("distance %f, range %f \n",distance,range);
+	    //printf("distance %f, range %f \n",distance,range);
 	    // If within range, connect the vertices
 	    if (distance < range)
 		{
@@ -1578,7 +1587,7 @@ void Graph:: generateCluster(int &iseed, int &nVert, double &rmax){
 
     clearGraph();
 
-    nVertices = nVert;
+    //nVertices = nVert;
 
     double rmin = 0.0;
     double r =0.0;
@@ -1596,11 +1605,13 @@ void Graph:: generateCluster(int &iseed, int &nVert, double &rmax){
     srand(iseed);
 
     printf("Generating Plummer Sphere Initial Conditions, Rmax: %f \n",rmax);
-    for (int i=0; i<nVertices; i++)
+    printf("nVertices: %i \n",nVert);
+
+    for (int i=0; i<nVert; i++)
 	{
 
-	percent = percent + 1 / float(nVertices);
-   	if (percent > 0.1)
+	percent = percent + 100.0 / float(nVert);
+   	if (percent > 10.0)
    	    {
    	    timecounter = timecounter + 10.0;
    	    printf("%.0f %% complete \n", timecounter);
@@ -1779,7 +1790,7 @@ void Graph::initialiseLKSystems(double time, double dt)
 
     }
 
-void Graph::updateLKSystems(double t,bool writeSnapshot)
+void Graph::updateLKSystems(double t)
 
     {
     /*
@@ -1797,9 +1808,27 @@ void Graph::updateLKSystems(double t,bool writeSnapshot)
     // Now update system
     for (int i=0; i<nVertices; i++)
 	{
-	vertices[i]->updateLKSystem(t,writeSnapshot);
+	vertices[i]->updateLKSystem(t);
 	}
 
     }
+
+void Graph::writeLKSnapshots(double t)
+
+{
+  /*
+   * Written 15/3/18 by dh4gan
+   * Handles writing of data to file
+   * for LKSystem objects in Graph
+   *
+   */
+
+  for(int i=0; i<nVertices; i++)
+    {
+      vertices[i]->writeToFile(t);
+    }
+
+}
+
 
 
