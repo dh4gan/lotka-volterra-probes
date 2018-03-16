@@ -105,7 +105,8 @@ public:
     void clearAllEdges();
     void createNeighbourNetwork(double range);
     void initialiseLKSystems(double t,double dt);
-    void updateLKSystems(double t,bool writeSnapshot);
+    void updateLKSystems(double t);
+    void writeLKSnapshots(double t);
 
 
 protected:
