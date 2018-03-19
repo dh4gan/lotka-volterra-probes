@@ -78,7 +78,8 @@ void parFile::readParams()
   // Then loop through each line using getline and then
   // assign to vectors
 
-
+  velocity1=-10.0;
+  velocity2=-10.0;
   while (getline(myfile, line))
   	{
   	istringstream iss(line);
@@ -114,23 +115,28 @@ void parFile::readParams()
   	  if(par=="predDeath"){ iss>>predDeath1 >> predDeath2;}
   	  if(par=="mutationRate"){ iss>>mutationRate1 >> mutationRate2;}
   	  if(par=="outflowRate") { iss>>outflowRate1 >> outflowRate2;}
-  	  if(par=="velocity"){ iss>>velocity1 >> velocity2;}
 
-  	  if(velocity1>1.0)
-  	    {
-  	      printf("WARNING: attempting to set probe velocity > c; automatically fixing max=c \n");
-  	      velocity1 = 1.0;
-  	    }
+  	  if(par=="velocity" and velocity1<0.0){
 
 
-  	  if(velocity2>1.0)
-  	    {
-  	      printf("WARNING: attempting to set probe velocity > c; automatically fixing max=c \n");
-  	      velocity2 = 1.0;
-  	    }
+  	      iss>>velocity1 >> velocity2;
 
-  	  velocity1 = velocity1*c_kpc_Myr;
-  	  velocity2 = velocity2*c_kpc_Myr;
+  	      if(velocity1>1.0)
+  		{
+  		  printf("WARNING: attempting to set probe velocity %f > c; automatically fixing max=c \n",velocity1);
+  		  velocity1 = 1.0;
+  		}
+
+
+  	      if(velocity2>1.0)
+  		{
+  		  printf("WARNING: attempting to set probe velocity %f > c; automatically fixing max=c \n",velocity2);
+  		  velocity2 = 1.0;
+  		}
+
+  	      velocity1 = velocity1*c_kpc_Myr;
+  	      velocity2 = velocity2*c_kpc_Myr;
+  	}
 
   	}
 }
@@ -188,6 +194,11 @@ void parFile::writeParamsToFile()
 
       fprintf(outputFile, "Predator Growth Rate: %f \n",predGrow1);
       fprintf(outputFile, "Predator Death Rate: %f \n",predDeath1);
+
+      fprintf(outputFile, "Mutation Rate: %f \n",mutationRate1);
+      fprintf(outputFile, "Outflow Rate: %f \n",outflowRate1);
+      fprintf(outputFile, "Velocity: %f c\n",velocity1/c_kpc_Myr);
+
     }
   else if(parChoice=="uniform")
 
@@ -203,6 +214,15 @@ void parFile::writeParamsToFile()
 
       fprintf(outputFile, "Minimum Predator Death Rate: %f \n",predDeath1);
       fprintf(outputFile, "Maximum Predator Death Rate: %f \n",predDeath2);
+
+      fprintf(outputFile,"Minimum Mutation Rate: %f \n",mutationRate1);
+      fprintf(outputFile,"Maximum Mutation Rate: %f \n",mutationRate2);
+
+      fprintf(outputFile,"Minimum Outflow Rate: %f \n",outflowRate1);
+      fprintf(outputFile,"Maximum Outflow Rate: %f \n",outflowRate2);
+
+      fprintf(outputFile,"Minimum Velocity: %f c\n",velocity1/c_kpc_Myr);
+      fprintf(outputFile,"Maximum Velocity: %f c\n",velocity2/c_kpc_Myr);
     }
 
   else if(parChoice=="gaussian")
@@ -219,6 +239,15 @@ void parFile::writeParamsToFile()
 
         fprintf(outputFile, "Mean Predator Death Rate: %f \n",predDeath1);
         fprintf(outputFile, "SD of Predator Death Rate: %f \n",predDeath2);
+
+        fprintf(outputFile,"Mean Mutation Rate: %f \n",mutationRate1);
+        fprintf(outputFile,"SD of Mutation Rate: %f \n",mutationRate2);
+
+        fprintf(outputFile,"Mean Outflow Rate: %f \n",outflowRate1);
+        fprintf(outputFile,"SD of Outflow Rate: %f \n",outflowRate2);
+
+        fprintf(outputFile,"Mean Velocity: %f c\n",velocity1/c_kpc_Myr);
+        fprintf(outputFile,"SD of Velocity: %f c\n",velocity2/c_kpc_Myr);
       }
 
   fclose(outputFile);
@@ -276,6 +305,12 @@ void parFile::writeParamsToScreen()
 
        printf("Predator Growth Rate: %f \n",predGrow1);
        printf("Predator Death Rate: %f \n",predDeath1);
+
+       printf("Mutation Rate: %f \n",mutationRate1);
+       printf("Outflow Rate: %f \n",outflowRate1);
+       printf("Velocity: %f c\n",velocity1/c_kpc_Myr);
+
+
      }
    else if(parChoice=="uniform")
 
@@ -291,6 +326,16 @@ void parFile::writeParamsToScreen()
 
        printf("Minimum Predator Death Rate: %f \n",predDeath1);
        printf("Maximum Predator Death Rate: %f \n",predDeath2);
+
+       printf("Minimum Mutation Rate: %f \n",mutationRate1);
+       printf("Maximum Mutation Rate: %f \n",mutationRate2);
+
+       printf("Minimum Outflow Rate: %f \n",outflowRate1);
+       printf("Maximum Outflow Rate: %f \n",outflowRate2);
+
+       printf("Minimum Velocity: %f c\n",velocity1/c_kpc_Myr);
+       printf("Maximum Velocity: %f c\n",velocity2/c_kpc_Myr);
+
      }
 
    else if(parChoice=="gaussian")
@@ -307,6 +352,16 @@ void parFile::writeParamsToScreen()
 
          printf("Mean Predator Death Rate: %f \n",predDeath1);
          printf("SD of Predator Death Rate: %f \n",predDeath2);
+
+         printf("Mean Mutation Rate: %f \n",mutationRate1);
+         printf("SD of Mutation Rate: %f \n",mutationRate2);
+
+         printf("Mean Outflow Rate: %f \n",outflowRate1);
+         printf("SD of Outflow Rate: %f \n",outflowRate2);
+
+         printf("Mean Velocity: %f c\n",velocity1/c_kpc_Myr);
+         printf("SD of Velocity: %f c\n",velocity2/c_kpc_Myr);
+
        }
 
 printf("%s \n",divider.c_str());
