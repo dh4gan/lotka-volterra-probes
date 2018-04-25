@@ -26,6 +26,8 @@ preyGrow	1.0	1.1	Prey Growth Rate
 preyDeath	1.0	1.1	Prey Death Rate
 predGrow	1.01	1.1	Predator Growth Rate
 predDeath	1.0	1.1	Predator Death Rate
+preyCarry	10	10	Prey Carrying Capacity
+predCarry 	1.0e30	1.0e30  Predator Carrying Capacity
 mutationRate	0.0	0.0	Prey -> Predator Mutation Rate
 outflowRate	0.1	0.1	Prey/Predator Outflow Rate
 velocity	0.1	0.1	Prey/Predator Velocity (fraction of lightspeed)

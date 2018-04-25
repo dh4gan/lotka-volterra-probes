@@ -22,6 +22,9 @@ LKVertex::LKVertex(int ID) :
     predatorGrowth = 10.0;
     predatorDeath = 1.0;
 
+    preyCapacity = 1.0e30;
+    predCapacity = 1.0e30;
+
     mutationRate = 0.0;
     outflowRate = 0.0;
     probeVelocity = 1.0;
@@ -51,6 +54,9 @@ LKVertex::LKVertex(int ID, Vector3D pos) :
     predatorGrowth = 10.0;
     predatorDeath = 1.0;
 
+    preyCapacity = 1.0e30;
+    predCapacity = 1.0e30;
+
     mutationRate = 0.0;
     outflowRate = 0.0;
     probeVelocity = 1.0;
@@ -68,7 +74,7 @@ LKVertex::LKVertex(int ID, Vector3D pos) :
     }
 
 LKVertex::LKVertex(int ID, double initialPrey, double initialPredator, double preyGrow,
-	    double preyDie, double predGrow, double predDeath,
+	    double preyDie, double predGrow, double predDeath,double preyCarry, double predCarry,
 	    double mutate, double outflow, double vel, double t0) :
 		    Vertex(ID)
     {
@@ -77,6 +83,10 @@ LKVertex::LKVertex(int ID, double initialPrey, double initialPredator, double pr
 
     preyGrowth = preyGrow;
     preyDeath = preyDie;
+
+    preyCapacity = preyCarry;
+    predCapacity = predCarry;
+
     predatorGrowth = predGrow;
     predatorDeath = predDeath;
     mutationRate = mutate;
@@ -96,7 +106,7 @@ LKVertex::LKVertex(int ID, double initialPrey, double initialPredator, double pr
     }
 
 LKVertex::LKVertex(int ID, Vector3D pos, double initialPrey, double initialPredator, double preyGrow,
-	    double preyDie, double predGrow, double predDeath,
+	    double preyDie, double predGrow, double predDeath, double preyCarry, double predCarry,
 	    double mutate, double outflow, double vel, double t0) :
 		    Vertex(ID, pos)
     {
@@ -105,8 +115,13 @@ LKVertex::LKVertex(int ID, Vector3D pos, double initialPrey, double initialPreda
 
     preyGrowth = preyGrow;
     preyDeath = preyDie;
+
     predatorGrowth = predGrow;
     predatorDeath = predDeath;
+
+    preyCapacity = preyCarry;
+    predCapacity = predCarry;
+
     mutationRate = mutate;
     outflowRate = outflow;
     probeVelocity = vel;
@@ -175,7 +190,7 @@ void LKVertex::determineTZero(double time)
 
 
 void LKVertex::setLKParameters(double initialPrey, double initialPred,double preyGrow,
-	    double preyDie, double predGrow, double predDeath,
+	    double preyDie, double predGrow, double predDeath,double preyCarry,double predCarry,
 	    double mutate, double outflow, double vel, double t0)
 
     {
@@ -192,6 +207,9 @@ void LKVertex::setLKParameters(double initialPrey, double initialPred,double pre
 
     predatorGrowth = predGrow;
     predatorDeath = predDeath;
+
+    preyCapacity = preyCarry;
+    predCapacity = predCarry;
 
     mutationRate = mutate;
     outflowRate = outflow;
@@ -226,15 +244,15 @@ void LKVertex::updateLKSystem(double t)
     /*
      * Written 28/9/17 by dh4gan
      * Integrates the LK system by one timestep
-     *
+     * Assumes both predators and prey practise logistic growth
      */
 
     // Calculate the rate of change of prey = birth rate - death rate - prey leaving + prey arriving
 
-    ratePrey = preyGrowth*nPrey - preyDeath*nPrey*nPredator - preyOut + preyIn;
+    ratePrey = preyGrowth*nPrey*(1.0 - nPrey/preyCapacity) - preyDeath*nPrey*nPredator - preyOut + preyIn;
 
     // same for predators (but also include a mutation term from prey into predators)
-    ratePredator = predatorGrowth*nPredator*nPrey - predatorDeath*nPredator + mutationRate*nPrey - predatorOut + predatorIn;
+    ratePredator = predatorGrowth*nPredator*nPrey*(1.0 - nPredator/predCapacity) - predatorDeath*nPredator + mutationRate*nPrey - predatorOut + predatorIn;
 
     nPrey = nPrey + ratePrey*timestep;
     nPredator = nPredator + ratePredator*timestep;

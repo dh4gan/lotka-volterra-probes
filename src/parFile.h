@@ -57,6 +57,12 @@ public:
 	double preyDeath1;
 	double preyDeath2;
 
+	double preyCarry1;
+	double preyCarry2;
+
+	double predCarry1;
+	double predCarry2;
+
 	double mutationRate1;
 	double mutationRate2;
 

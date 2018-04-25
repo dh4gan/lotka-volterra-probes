@@ -105,7 +105,7 @@ public:
 
 
         virtual void setLKParameters(double initialPrey, double initialPred,double preyGrow,
-       	    double preyDie, double predGrow, double predDeath,
+       	    double preyDie, double predGrow, double predDeath, double preyCarry, double predCarry,
        	    double mutate, double outflow, double vel, double t0){};
         virtual void initialiseLKSystem(double time, double dt, double initialPrey, double initialPredator){};
         virtual void initialiseLKSystem(double time, double dt){};

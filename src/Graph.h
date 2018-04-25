@@ -78,16 +78,16 @@ public:
     void generateGHZ(int &iseed, int &nVert, double &innerRadius, double &outerRadius, double &scale);
     void generateCluster(int &iseed, int &nVert, double &rmax);
 
-    //TODO Must insert LKVertex, not Vertex Objects into Graph! Do in construction methods
-
     void generateConstantLKParameters(double initialPrey, double initialPred, double preyGrow,
-	double preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0);
+	double preyDeath,double predGrow, double predDeath, double preyCarry,double predCarry,double mutate, double outflow, double velocity, double t0);
 
     void generateGaussianLKParameters(double initialPrey, double initialPred,
     	double meanPreyGrow, double sdPreyGrow,
     	double meanPreyDeath, double sdPreyDeath,
     	double meanPredGrow, double sdPredGrow,
     	double meanPredDeath, double sdPredDeath,
+    	double meanPreyCarry, double sdPreyCarry,
+    	double meanPredCarry, double sdPredCarry,
     	double meanMutate, double sdMutate,
     	double meanOutflow, double sdOutflow,
     	double meanVelocity, double sdVelocity);
@@ -97,6 +97,8 @@ public:
 		double preyDeathMin, double preyDeathMax,
 		double predGrowMin, double predGrowMax,
 		double predDeathMin, double predDeathMax,
+		double preyCarryMin, double preyCarryMax,
+		double predCarryMin, double predCarryMax,
 		double mutateMin, double mutateMax,
 		double outflowMin, double outflowMax,
 		double velocityMin, double velocityMax);

@@ -93,6 +93,8 @@ int main(int argc, char* argv[])
 	                          	input.preyDeath1, input.preyDeath2,
 	                          	input.predGrow1, input.predGrow2,
 	                          	input.predDeath1, input.predDeath2,
+	                          	input.preyCarry1, input.preyCarry2,
+	                          	input.predCarry1, input.predCarry2,
 	                          	input.mutationRate1, input.mutationRate2,
 	                          	input.outflowRate1, input.outflowRate2,
 	                          	input.velocity1, input.velocity2);
@@ -105,14 +107,20 @@ int main(int argc, char* argv[])
 		                          	input.preyDeath1, input.preyDeath2,
 		                          	input.predGrow1, input.predGrow2,
 		                          	input.predDeath1, input.predDeath2,
+		                          	input.preyCarry1, input.preyCarry2,
+		                          	input.predCarry1, input.predCarry2,
 		                          	input.mutationRate1, input.mutationRate2,
 		                          	input.outflowRate1, input.outflowRate2,
 		                          	input.velocity1, input.velocity2);
       }
     else
       {
-	graph.generateConstantLKParameters(input.initialPrey, input.initialPred, input.preyGrow1,
-			input.preyDeath1, input.predGrow1, input.predDeath1, input.mutationRate1, input.outflowRate1, input.velocity1, t0);
+	graph.generateConstantLKParameters(input.initialPrey, input.initialPred,
+					   input.preyGrow1, input.preyDeath1,
+					   input.predGrow1, input.predDeath1,
+					   input.preyCarry1, input.predCarry1,
+					   input.mutationRate1, input.outflowRate1,
+					   input.velocity1, t0);
 
       }
 

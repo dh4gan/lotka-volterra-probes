@@ -1656,7 +1656,7 @@ void Graph:: generateCluster(int &iseed, int &nVert, double &rmax){
 
 
 void Graph::generateConstantLKParameters(double initialPrey, double initialPred, double preyGrow,
-	double preyDeath,double predGrow, double predDeath, double mutate, double outflow, double velocity, double t0)
+	double preyDeath,double predGrow, double predDeath, double preyCarry, double predCarry,double mutate, double outflow, double velocity, double t0)
     {
     /*
      * Written 29/1/18 by dh4gan
@@ -1676,7 +1676,7 @@ void Graph::generateConstantLKParameters(double initialPrey, double initialPred,
 	    initialPred=0.0;
 	    }
 
-	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,mutate,outflow,velocity,t0);
+	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,preyCarry,predCarry,mutate,outflow,velocity,t0);
 
    	}
 
@@ -1687,6 +1687,8 @@ void Graph::generateUniformLKParameters(double initialPrey, double initialPred,
 	double preyDeathMin, double preyDeathMax,
 	double predGrowMin, double predGrowMax,
 	double predDeathMin, double predDeathMax,
+	double preyCarryMin, double preyCarryMax,
+	double predCarryMin, double predCarryMax,
 	double mutateMin, double mutateMax,
 	double outflowMin, double outflowMax,
 	double velocityMin, double velocityMax)
@@ -1710,6 +1712,9 @@ void Graph::generateUniformLKParameters(double initialPrey, double initialPred,
 	double predGrow = uniformSample(predGrowMin, predGrowMax);
 	double predDeath = uniformSample(predDeathMin, predDeathMax);
 
+	double preyCarry = uniformSample(preyCarryMin,preyCarryMax);
+	double predCarry = uniformSample(predCarryMin,predCarryMax);
+
 	double mutate = uniformSample(mutateMin, mutateMax);
 	double outflow = uniformSample(outflowMin, outflowMax);
 	double velocity = uniformSample(velocityMin, velocityMax);
@@ -1721,7 +1726,7 @@ void Graph::generateUniformLKParameters(double initialPrey, double initialPred,
    	    initialPred=0.0;
    	    }
 
-   	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,mutate,outflow,velocity,t0);
+   	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,preyCarry,predCarry,mutate,outflow,velocity,t0);
 
       	}
 
@@ -1733,6 +1738,8 @@ void Graph::generateGaussianLKParameters(double initialPrey, double initialPred,
 	double meanPreyDeath, double sdPreyDeath,
 	double meanPredGrow, double sdPredGrow,
 	double meanPredDeath, double sdPredDeath,
+	double meanPreyCarry, double sdPreyCarry,
+	double meanPredCarry, double sdPredCarry,
 	double meanMutate, double sdMutate,
 	double meanOutflow, double sdOutflow,
 	double meanVelocity, double sdVelocity)
@@ -1755,6 +1762,9 @@ void Graph::generateGaussianLKParameters(double initialPrey, double initialPred,
 	double predGrow = gaussianSample(meanPredGrow, sdPredGrow);
 	double predDeath = gaussianSample(meanPredDeath, sdPredDeath);
 
+	double preyCarry = gaussianSample(meanPreyCarry, sdPreyCarry);
+	double predCarry = gaussianSample(meanPredCarry, sdPredCarry);
+
 	double mutate = gaussianSample(meanMutate, sdMutate);
 	double outflow = gaussianSample(meanOutflow, sdOutflow);
 	double velocity = gaussianSample(meanVelocity, sdVelocity);
@@ -1766,7 +1776,7 @@ void Graph::generateGaussianLKParameters(double initialPrey, double initialPred,
    	    initialPred=0.0;
    	    }
 
-   	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,mutate,outflow,velocity,t0);
+   	vertices[i]->setLKParameters(initialPrey, initialPred, preyGrow,preyDeath,predGrow,predDeath,preyCarry,predCarry,mutate,outflow,velocity,t0);
 
       	}
 

@@ -18,11 +18,11 @@ public:
     LKVertex(int ID, Vector3D pos);
 
     LKVertex(int ID, double initialPrey, double initialPredator, double preyGrow,
-	    double preyDie, double predGrow, double predDeath,
+	    double preyDie, double predGrow, double predDeath, double preyCarry,double predCarry,
 	    double mutate, double outflow, double vel, double t0);
 
     LKVertex(int ID, Vector3D pos, double initialPrey, double initialPredator, double preyGrow,
-	    double preyDie, double predGrow, double predDeath,
+	    double preyDie, double predGrow, double predDeath, double preyCarry, double predCarry,
 	    double mutate, double outflow, double vel, double t0);
 
 
@@ -68,7 +68,7 @@ public:
     void initialiseLKSystem(double time, double dt);
     void initialiseLKSystem(double time, double dt, double initialPrey, double initialPredator);
     void setLKParameters(double initialPrey, double initialPred,double preyGrow,
-	    double preyDie, double predGrow, double predDeath,
+	    double preyDie, double predGrow, double predDeath, double preyCarry,double predCarry,
 	    double mutate, double outflow, double vel, double t0);
     void determineTZero(double time);
     void computeOutwardFlux(double t);
@@ -80,6 +80,7 @@ protected:
     double nPrey, nPredator;
     double preyGrowth, preyDeath, mutationRate;
     double predatorGrowth, predatorDeath;
+    double preyCapacity, predCapacity;
     double probeVelocity, outflowRate;
     double tzero, timestep;
 
