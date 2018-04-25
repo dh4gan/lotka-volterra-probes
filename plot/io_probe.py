@@ -233,9 +233,11 @@ def plot_all_populations(data=None):
     
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Number')
+    ax1.set_yscale('log')
         
     ax2.set_xlabel('Time')
     ax2.set_ylabel('Number')
+    ax2.set_yscale('log')
     
     for i in range(len(data)):
         
@@ -270,6 +272,7 @@ def calculate_total_populations(data=None):
     ax1.plot(time,npred,label='Predator',color=predcolor)
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Number')
+    ax1.set_yscale('log')
     ax1.legend()
     
     fig1.savefig("n_vs_t.png")
