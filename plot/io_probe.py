@@ -17,6 +17,10 @@ ipredout = 6
 preycolor = '#669900'
 predcolor = '#ff3300'
 
+
+xlabel = 'x (kpc)'
+ylabel = 'y (kpc)'
+
 timelabel = 'Time (Myr)'
 numlabel = 'Number (Thousands)'
 
@@ -25,6 +29,8 @@ predlabel = 'Predators (Thousands)'
 
 preyleg = 'Prey'
 predleg = 'Predators'
+
+axesize=20
 
 def sort_nicely(l):
     """
@@ -112,6 +118,9 @@ def plot_graph(graphfile,outputfile=None,markerscale=0.1,vertexID=None,vertexPos
     fig = plt.figure()
     ax = fig.add_subplot(111)
     
+    ax.set_xlabel(xlabel,fontsize=axesize)
+    ax.set_ylabel(ylabel,fontsize=axesize)
+    
     ax.set_xlim((-1.5*np.amax(vertexPositions[:,0]),1.5*np.amax(vertexPositions[:,0])))
     ax.set_ylim((-1.5*np.amax(vertexPositions[:,1]),1.5*np.amax(vertexPositions[:,1])))
     
@@ -151,6 +160,9 @@ def plot_graph_population(index,graphfile,outputfile=None, data=None,  markersca
     
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    
+    ax.set_xlabel(xlabel,fontsize=axesize)
+    ax.set_ylabel(ylabel,fontsize=axesize)
     
     ax.set_xlim((-1.5*np.amax(vertexPositions[:,0]),1.5*np.amax(vertexPositions[:,0])))
     ax.set_ylim((-1.5*np.amax(vertexPositions[:,1]),1.5*np.amax(vertexPositions[:,1])))
@@ -240,12 +252,12 @@ def plot_all_populations(data=None):
     predfig = plt.figure()
     ax2 = predfig.add_subplot(111)
     
-    ax1.set_xlabel(timelabel)
-    ax1.set_ylabel(numlabel)
+    ax1.set_xlabel(timelabel,fontsize=axesize)
+    ax1.set_ylabel(numlabel,fontsize=axesize)
     ax1.set_yscale('log')
         
-    ax2.set_xlabel(timelabel)
-    ax2.set_ylabel(numlabel)
+    ax2.set_xlabel(timelabel,fontsize=axesize)
+    ax2.set_ylabel(numlabel,fontsize=axesize)
     ax2.set_yscale('log')
     
     for i in range(len(data)):
@@ -279,8 +291,8 @@ def calculate_total_populations(data=None):
     ax1 = fig1.add_subplot(111)
     ax1.plot(time,nprey,label=preyleg, color=preycolor)
     ax1.plot(time,npred,label=predleg,color=predcolor)
-    ax1.set_xlabel(timelabel)
-    ax1.set_ylabel(numlabel)
+    ax1.set_xlabel(timelabel,fontsize=axesize)
+    ax1.set_ylabel(numlabel,fontsize=axesize)
     ax1.set_yscale('log')
     ax1.legend()
     
