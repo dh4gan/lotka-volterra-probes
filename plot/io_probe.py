@@ -17,6 +17,15 @@ ipredout = 6
 preycolor = '#669900'
 predcolor = '#ff3300'
 
+timelabel = 'Time (Myr)'
+numlabel = 'Number (Thousands)'
+
+preylabel = 'Prey (Thousands)'
+predlabel = 'Predators (Thousands)'
+
+preyleg = 'Prey'
+predleg = 'Predators'
+
 def sort_nicely(l):
     """
     Sort the given list in a 'Natural' order
@@ -217,8 +226,8 @@ def plot_population_star(istar, data=None):
     
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    ax1.plot(time,nprey,label='Prey',color=preycolor)
-    ax1.plot(time,npred,label='Predator',color=predcolor)
+    ax1.plot(time,nprey,label=preyleg,color=preycolor)
+    ax1.plot(time,npred,label=predleg,color=predcolor)
     
     
 def plot_all_populations(data=None):
@@ -231,12 +240,12 @@ def plot_all_populations(data=None):
     predfig = plt.figure()
     ax2 = predfig.add_subplot(111)
     
-    ax1.set_xlabel('Time')
-    ax1.set_ylabel('Number')
+    ax1.set_xlabel(timelabel)
+    ax1.set_ylabel(numlabel)
     ax1.set_yscale('log')
         
-    ax2.set_xlabel('Time')
-    ax2.set_ylabel('Number')
+    ax2.set_xlabel(timelabel)
+    ax2.set_ylabel(numlabel)
     ax2.set_yscale('log')
     
     for i in range(len(data)):
@@ -268,10 +277,10 @@ def calculate_total_populations(data=None):
 
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)
-    ax1.plot(time,nprey,label='Prey', color=preycolor)
-    ax1.plot(time,npred,label='Predator',color=predcolor)
-    ax1.set_xlabel('Time')
-    ax1.set_ylabel('Number')
+    ax1.plot(time,nprey,label=preyleg, color=preycolor)
+    ax1.plot(time,npred,label=predleg,color=predcolor)
+    ax1.set_xlabel(timelabel)
+    ax1.set_ylabel(numlabel)
     ax1.set_yscale('log')
     ax1.legend()
     
@@ -280,18 +289,8 @@ def calculate_total_populations(data=None):
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
     ax2.plot(nprey,npred)
-    ax2.set_xlabel("Prey")
-    ax2.set_ylabel("Predators")
+    ax2.set_xlabel(preylabel)
+    ax2.set_ylabel(predlabel)
     fig2.savefig("prey_vs_predators.png")
     
     return nprey, npred
-
-
-    
-    
-    
-        
-    
-
-
-    
