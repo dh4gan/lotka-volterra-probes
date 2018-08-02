@@ -38,6 +38,7 @@ LKVertex::LKVertex(int ID) :
     predatorOut = 0.0;
     predatorIn = 0.0;
     outputFile = NULL;
+    infoFile = NULL;
 
 
     }
@@ -70,6 +71,7 @@ LKVertex::LKVertex(int ID, Vector3D pos) :
     predatorOut = 0.0;
     predatorIn = 0.0;
     outputFile = NULL;
+    infoFile = NULL;
 
     }
 
@@ -102,6 +104,7 @@ LKVertex::LKVertex(int ID, double initialPrey, double initialPredator, double pr
     predatorOut = 0.0;
     predatorIn = 0.0;
     outputFile = NULL;
+    infoFile = NULL;
 
     }
 
@@ -135,6 +138,7 @@ LKVertex::LKVertex(int ID, Vector3D pos, double initialPrey, double initialPreda
     predatorOut = 0.0;
     predatorIn = 0.0;
     outputFile = NULL;
+    infoFile = NULL;
     }
 
 void LKVertex::initialiseLKSystem(double time, double dt)
@@ -162,10 +166,12 @@ void LKVertex::initialiseLKSystem(double time, double dt)
     ss << setw(5) << setfill('0') << ident;
     string fileNumber = ss.str();
     string logFileName = "LKSystem_"+fileNumber+".log";
+    string infoFileName = "LKSystem_"+fileNumber+".info";
 
     printf("Initialising output %s \n", logFileName.c_str());
 
     outputFile = fopen(logFileName.c_str(), "w");
+    infoFile = fopen(infoFileName.c_str(),"w");
 
     }
 
@@ -218,7 +224,52 @@ void LKVertex::setLKParameters(double initialPrey, double initialPred,double pre
 
     }
 
-void LKVertex::writeToFile(double time)
+void LKVertex::writeLKParametersToFile()
+
+{
+  /*
+   * Written 2/8/17 by dh4gan
+   * Writes the LK system parameters to an information file
+   *
+   */
+
+    time_t rawtime;
+    struct tm* timeinfo;
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    string divider = "---------------------\n";
+
+    fprintf(infoFile,"Parameters for LKVertex %i \n", ident);
+    fprintf(infoFile, "Time: %s \n", asctime(timeinfo));
+    fprintf(infoFile,"Position: %f %f %f \n", position.elements[0],position.elements[1],position.elements[2]);
+    fprintf(infoFile, divider.c_str());
+
+    // Print position, and number of connections
+
+    fprintf(infoFile,"Initial Prey Count: %.4E \n", nPrey);
+    fprintf(infoFile,"Initial Predator Count: %.4E \n", nPredator);
+
+    fprintf(infoFile,"Prey Growth Rate: %.4E \n", preyGrowth);
+    fprintf(infoFile,"Prey Death Rate: %.4E \n", preyDeath);
+    fprintf(infoFile,"Prey Carrying Capacity: %.4E \n", preyCapacity);
+
+    fprintf(infoFile,"Predator Growth Rate: %.4E \n", predatorGrowth);
+    fprintf(infoFile,"Predator Death Rate: %.4E \n", predatorDeath);
+    fprintf(infoFile,"Predator Carrying Capacity: %.4E \n", predCapacity);
+
+    fprintf(infoFile, "Mutation Rate: %.4E \n", mutationRate);
+    fprintf(infoFile, "Outflow Rate: %.4E \n", outflowRate);
+    fprintf(infoFile, "Probe Velocity: %.4E c\n", probeVelocity/c_kpc_Myr);
+
+
+
+    fclose(infoFile);
+
+}
+
+void LKVertex::writePopulationsToFile(double time)
     {
     /*
      * written 28/9/17 by dh4gan

@@ -5,6 +5,7 @@ import numpy as np
 import glob
 import re
 import matplotlib.pyplot as plt
+from scipy.signal import blackman, periodogram
 
 itime = 0
 iprey = 1
@@ -64,6 +65,38 @@ def find_sorted_local_input_fileset(stringmatch):
     
     
     return filechoices
+
+
+def find_sorted_local_input_file(stringmatch):
+    '''Given a matching string (e.g. '*.txt') the function allows user to select a single file'''
+    
+    filechoices = glob.glob(stringmatch)
+    
+    # Number of matches
+    nmatch = len(filechoices)
+    
+    # Sort using Natural sort (see function at top)
+    sort_nicely(filechoices)
+
+    print 'Detected ', nmatch, ' potential inputfiles in this directory'
+    print 'Here are the options: '
+
+    for i in range (nmatch):
+        print '(',i+1,'): ', filechoices[i]
+        
+    if(nmatch>0): print 'If none of these files suit:'
+    print '(',nmatch+1,'):  Manually enter a filename'
+    
+    userselect = input('Make a selection: ')
+    
+    if userselect==nmatch+1:
+        filename = raw_input('Manually enter filename: ')
+    else:
+        filename = filechoices[userselect-1]
+        
+    print 'File ',filename, ' selected for read-in'
+    return filename 
+
 
 
 def read_logfile(filename):
@@ -227,19 +260,108 @@ def plot_graph_population_movie(graphfile,interval=1,markerscale=0.1):
         print "Generating file ",outputfile
         plot_graph_population(i,graphfile,outputfile=outputfile, data=data,  markerscale=0.1,vertexID=vertexID,vertexPositions=vertexPositions,edges=edges)
     
-def plot_population_star(istar, data=None):
-    if(data==None):
-        data=read_logfiles()
+def plot_population_star():
+
+    filename = find_sorted_local_input_file('*.log')
+
+    data=read_logfile(filename)
         
-    time = data[istar][:,itime]
-    nprey = data[istar][:,iprey]
-    npred = data[istar][:,ipred]
+    time = data[:,itime]
+    nprey = data[:,iprey]
+    npred = data[:,ipred]
     
     
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
+    ax1.set_xlabel(timelabel,fontsize=axesize)
+    ax1.set_ylabel(numlabel,fontsize=axesize)
     ax1.plot(time,nprey,label=preyleg,color=preycolor)
     ax1.plot(time,npred,label=predleg,color=predcolor)
+    ax1.legend()
+
+    ax1.set_yscale('log')
+    plt.show()
+    outputfile = 'pp_'+filename+'.png'
+
+    fig.savefig(outputfile)
+    
+def plot_periodogram_star():
+    
+    filename = find_sorted_local_input_file('*.log')
+
+    data=read_logfile(filename)
+        
+    time = data[:,itime]
+    nprey = data[:,iprey]
+    npred = data[:,ipred]
+    
+    print 'Computing periodogram'
+
+    npoints = len(time)
+    # Compute the periodogram of y along the x axis    
+
+    dt = time[-1]/npoints
+
+    # First, smooth and apply a window function
+
+    w = blackman(npoints)
+
+    
+    freqprey, periodprey = periodogram(w*nprey, fs = 1.0/dt) 
+    freqpred, periodpred = periodogram(w*npred, fs = 1.0/dt)
+
+    # Calculate periods from these frequencies
+    periods = np.divide(1.0,freqprey)
+
+    
+    prey_outputfile = 'prey_period'+filename+'.png'
+    pred_outputfile = 'pred_period'+filename+'.png'
+
+    # Make figures
+
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111)
+    ax1.set_yscale('log')
+    ax1.set_xscale('log')
+    
+    ax1.set_xlabel("Period (years)", fontsize = 16)
+    ax1.set_ylabel("Periodogram for Prey", fontsize = 16)
+    
+    print "Largest prey peak: ",periods[np.argmax(periodprey[periods<100.0])]
+
+    ax1.plot(periods,periodprey)
+
+    fig1.savefig(prey_outputfile, format='png')
+    
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111)
+    ax2.set_yscale('log')
+    ax2.set_xscale('log')
+    
+    ax2.set_xlabel("Period (years)", fontsize = 16)
+    ax2.set_ylabel("Periodogram for Predators", fontsize = 16)
+
+    ax2.plot(periods,periodpred)
+    
+    print "Largest predator peak: ",periods[np.argmax(periodpred[periods<100.0])]  
+
+    fig2.savefig(pred_outputfile, format='png')
+    
+    fig3 = plt.figure()
+    ax3 = fig3.add_subplot(111)
+    ax3.set_yscale('log')
+    ax3.set_xscale('log')
+    ax3.set_xlabel("Period (years)", fontsize = 16)
+    ax3.set_ylabel("Periodogram Ratio", fontsize = 16)
+
+    ax3.plot(periods,periodpred*periodprey)
+
+    fig3.savefig('periodratio_'+filename+'.png', format='png')
+    
+    plt.show()
+            
+    
+    
     
     
 def plot_all_populations(data=None):
@@ -286,6 +408,104 @@ def calculate_total_populations(data=None):
         else:
             nprey = nprey + data[i][:,iprey]
             npred = npred + data[i][:,ipred]
+
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111)
+    ax1.plot(time,nprey,label=preyleg, color=preycolor)
+    ax1.plot(time,npred,label=predleg,color=predcolor)
+    ax1.set_xlabel(timelabel,fontsize=axesize)
+    ax1.set_ylabel(numlabel,fontsize=axesize)
+    ax1.set_yscale('log')
+    ax1.legend()
+    
+    fig1.savefig("n_vs_t.png")
+    
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111)
+    ax2.plot(nprey,npred)
+    ax2.set_xlabel(preylabel)
+    ax2.set_ylabel(predlabel)
+    fig2.savefig("prey_vs_predators.png")
+    
+    return nprey, npred
+
+
+def calculate_total_periodogram(data=None):
+    
+    if(data==None):
+        data = read_logfiles()
+    
+    for i in range(len(data)):
+        if(i==0):
+            time = data[i][:,itime]
+            nprey = data[i][:,iprey]
+            npred = data[i][:,ipred]
+        else:
+            nprey = nprey + data[i][:,iprey]
+            npred = npred + data[i][:,ipred]
+
+
+    npoints = len(time)
+    # Compute the periodogram of y along the x axis    
+
+    dt = time[-1]/npoints
+
+    # First, smooth and apply a window function
+
+    w = blackman(npoints)
+    
+    freqprey, periodprey = periodogram(w*nprey, fs = 1.0/dt) 
+    freqpred, periodpred = periodogram(w*npred, fs = 1.0/dt)
+
+    # Calculate periods from these frequencies
+    periods = np.divide(1.0,freqprey)
+
+    prey_outputfile = 'prey_period.png'
+    pred_outputfile = 'pred_period.png'
+
+    # Make figures
+
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111)
+    ax1.set_yscale('log')
+    ax1.set_xscale('log')
+    
+    ax1.set_xlabel("Period (years)", fontsize = 16)
+    ax1.set_ylabel("Periodogram for Prey", fontsize = 16)
+    
+    print "Largest prey peak: ",periods[np.argmax(periodprey[periods<100.0])]
+
+    ax1.plot(periods,periodprey)
+
+    fig1.savefig(prey_outputfile, format='png')
+    
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111)
+    ax2.set_yscale('log')
+    ax2.set_xscale('log')
+    
+    ax2.set_xlabel("Period (years)", fontsize = 16)
+    ax2.set_ylabel("Periodogram for Predators", fontsize = 16)
+
+    ax2.plot(periods,periodpred)
+    
+    print "Largest predator peak: ",periods[np.argmax(periodpred[periods<100.0])]  
+
+    fig2.savefig(pred_outputfile, format='png')
+    
+    fig3 = plt.figure()
+    ax3 = fig3.add_subplot(111)
+    ax3.set_yscale('log')
+    ax3.set_xscale('log')
+    ax3.set_xlabel("Period (years)", fontsize = 16)
+    ax3.set_ylabel("Periodogram Ratio", fontsize = 16)
+
+    ax3.plot(periods,periodpred*periodprey)
+
+    fig3.savefig('periodratio.png', format='png')
+    
+    plt.show()
+            
 
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)

@@ -111,7 +111,8 @@ public:
         virtual void initialiseLKSystem(double time, double dt){};
         virtual void computeOutwardFlux(double t){};
         virtual void updateLKSystem(double t){};
-        virtual void writeToFile(double time){};
+        virtual void writeLKParametersToFile(){};
+        virtual void writePopulationsToFile(double time){};
 
 
 protected:

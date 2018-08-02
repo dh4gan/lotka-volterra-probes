@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     double t = 0.0;
     double t0 = t;
     double tnext = 0.0;
-    bool writeSnapshot;
+
 
     // Display header
 
@@ -136,6 +136,7 @@ int main(int argc, char* argv[])
 
     printf("Initialising all LK Systems \n");
     graph.initialiseLKSystems(t,input.dt);
+
 
     while(t<input.tmax)
 	{

@@ -1795,7 +1795,7 @@ void Graph::initialiseLKSystems(double time, double dt)
     for (int i=0; i<nVertices; i++)
 	{
 	vertices[i]->initialiseLKSystem(time,dt);
-
+	vertices[i]->writeLKParametersToFile();
 	}
 
     }
@@ -1835,7 +1835,7 @@ void Graph::writeLKSnapshots(double t)
 
   for(int i=0; i<nVertices; i++)
     {
-      vertices[i]->writeToFile(t);
+      vertices[i]->writePopulationsToFile(t);
     }
 
 }

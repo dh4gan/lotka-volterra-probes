@@ -250,32 +250,32 @@ void parFile::writeParamsToFile()
   else if(parChoice=="gaussian")
 
       {
-        fprintf(outputFile, "Mean Prey Growth Rate: %f \n",preyGrow1);
-        fprintf(outputFile, "SD of Prey Growth Rate: %f \n",preyGrow2);
+        fprintf(outputFile, "Mean Prey Growth Rate: %.4E \n",preyGrow1);
+        fprintf(outputFile, "SD of Prey Growth Rate: %.4E \n",preyGrow2);
 
-        fprintf(outputFile, "Mean Prey Death Rate: %f \n",preyDeath1);
-        fprintf(outputFile, "SD of Prey Death Rate: %f \n",preyDeath2);
+        fprintf(outputFile, "Mean Prey Death Rate: %.4E \n",preyDeath1);
+        fprintf(outputFile, "SD of Prey Death Rate: %.4E \n",preyDeath2);
 
-        fprintf(outputFile, "Mean Predator Growth Rate: %f \n",predGrow1);
-        fprintf(outputFile, "SD of Predator Growth Rate: %f \n",predGrow2);
+        fprintf(outputFile, "Mean Predator Growth Rate: %.4E \n",predGrow1);
+        fprintf(outputFile, "SD of Predator Growth Rate: %.4E \n",predGrow2);
 
-        fprintf(outputFile, "Mean Predator Death Rate: %f \n",predDeath1);
-        fprintf(outputFile, "SD of Predator Death Rate: %f \n",predDeath2);
+        fprintf(outputFile, "Mean Predator Death Rate: %.4E \n",predDeath1);
+        fprintf(outputFile, "SD of Predator Death Rate: %.4E \n",predDeath2);
 
-        fprintf(outputFile, "Mean Prey Carrying Capacity: %f \n",preyCarry1);
-        fprintf(outputFile, "SD of Prey Carrying Capacity: %f \n",preyCarry2);
+        fprintf(outputFile, "Mean Prey Carrying Capacity: %.4E \n",preyCarry1);
+        fprintf(outputFile, "SD of Prey Carrying Capacity: %.4E \n",preyCarry2);
 
-        fprintf(outputFile, "Mean Predator Carrying Capacity: %f \n",predCarry1);
-        fprintf(outputFile, "SD of Predator Carrying Capacity: %f \n",predCarry2);
+        fprintf(outputFile, "Mean Predator Carrying Capacity: %.4E \n",predCarry1);
+        fprintf(outputFile, "SD of Predator Carrying Capacity: %.4E \n",predCarry2);
 
-        fprintf(outputFile,"Mean Mutation Rate: %f \n",mutationRate1);
-        fprintf(outputFile,"SD of Mutation Rate: %f \n",mutationRate2);
+        fprintf(outputFile,"Mean Mutation Rate: %.4E \n",mutationRate1);
+        fprintf(outputFile,"SD of Mutation Rate: %.4E \n",mutationRate2);
 
-        fprintf(outputFile,"Mean Outflow Rate: %f \n",outflowRate1);
-        fprintf(outputFile,"SD of Outflow Rate: %f \n",outflowRate2);
+        fprintf(outputFile,"Mean Outflow Rate: %.4E \n",outflowRate1);
+        fprintf(outputFile,"SD of Outflow Rate: %.4E \n",outflowRate2);
 
-        fprintf(outputFile,"Mean Velocity: %f c\n",velocity1/c_kpc_Myr);
-        fprintf(outputFile,"SD of Velocity: %f c\n",velocity2/c_kpc_Myr);
+        fprintf(outputFile,"Mean Velocity: %.4E c\n",velocity1/c_kpc_Myr);
+        fprintf(outputFile,"SD of Velocity: %.4E c\n",velocity2/c_kpc_Myr);
       }
 
   fclose(outputFile);
@@ -317,8 +317,8 @@ void parFile::writeParamsToScreen()
      }
 
    printf("Maximum Time: %f Myr \n",tmax);
-   printf("Timestep: %f Myr \n",dt);
-   printf("Snapshot Interval: %f Myr \n",tsnap);
+   printf("Timestep: %.4E Myr \n",dt);
+   printf("Snapshot Interval: %.4E Myr \n",tsnap);
 
    printf("%s \n",divider.c_str());
    printf("Lotka Volterra Parameters\n");
@@ -328,82 +328,82 @@ void parFile::writeParamsToScreen()
 
    if(parChoice=="constant")
      {
-       printf("Prey Growth Rate: %f \n",preyGrow1);
-       printf("Prey Death Rate: %f \n",preyDeath1);
+       printf("Prey Growth Rate: %.4E \n",preyGrow1);
+       printf("Prey Death Rate: %.4E \n",preyDeath1);
 
-       printf("Predator Growth Rate: %f \n",predGrow1);
-       printf("Predator Death Rate: %f \n",predDeath1);
+       printf("Predator Growth Rate: %.4E \n",predGrow1);
+       printf("Predator Death Rate: %.4E \n",predDeath1);
 
-       printf("Prey Carrying Capacity: %f \n",preyCarry1);
-       printf("Predator Carrying Capacity: %f \n",predCarry1);
+       printf("Prey Carrying Capacity: %.4E \n",preyCarry1);
+       printf("Predator Carrying Capacity: %.4E \n",predCarry1);
 
-       printf("Mutation Rate: %f \n",mutationRate1);
-       printf("Outflow Rate: %f \n",outflowRate1);
-       printf("Velocity: %f c\n",velocity1/c_kpc_Myr);
+       printf("Mutation Rate: %.4E \n",mutationRate1);
+       printf("Outflow Rate: %.4E \n",outflowRate1);
+       printf("Velocity: %.4E c\n",velocity1/c_kpc_Myr);
 
 
      }
    else if(parChoice=="uniform")
 
      {
-       printf("Minimum Prey Growth Rate: %f \n",preyGrow1);
-       printf("Maximum Prey Growth Rate: %f \n",preyGrow2);
+       printf("Minimum Prey Growth Rate: %.4E \n",preyGrow1);
+       printf("Maximum Prey Growth Rate: %.4E \n",preyGrow2);
 
-       printf("Minimum Prey Death Rate: %f \n",preyDeath1);
-       printf("Maximum Prey Death Rate: %f \n",preyDeath2);
+       printf("Minimum Prey Death Rate: %.4E \n",preyDeath1);
+       printf("Maximum Prey Death Rate: %.4E \n",preyDeath2);
 
-       printf("Minimum Predator Growth Rate: %f \n",predGrow1);
-       printf("Maximum Predator Growth Rate: %f \n",predGrow2);
+       printf("Minimum Predator Growth Rate: %.4E \n",predGrow1);
+       printf("Maximum Predator Growth Rate: %.4E \n",predGrow2);
 
-       printf("Minimum Predator Death Rate: %f \n",predDeath1);
-       printf("Maximum Predator Death Rate: %f \n",predDeath2);
+       printf("Minimum Predator Death Rate: %.4E \n",predDeath1);
+       printf("Maximum Predator Death Rate: %.4E \n",predDeath2);
 
-       printf("Minimum Prey Carrying Capacity: %f \n",preyCarry1);
-       printf("Maximum Prey Carrying Capacity: %f \n",preyCarry2);
+       printf("Minimum Prey Carrying Capacity: %.4E \n",preyCarry1);
+       printf("Maximum Prey Carrying Capacity: %.4E \n",preyCarry2);
 
-       printf("Minimum Predator Carrying Capacity: %f \n",predCarry1);
-       printf("Maximum Predator Carrying Capacity: %f \n",predCarry2);
+       printf("Minimum Predator Carrying Capacity: %.4E \n",predCarry1);
+       printf("Maximum Predator Carrying Capacity: %.4E \n",predCarry2);
 
-       printf("Minimum Mutation Rate: %f \n",mutationRate1);
-       printf("Maximum Mutation Rate: %f \n",mutationRate2);
+       printf("Minimum Mutation Rate: %.4E \n",mutationRate1);
+       printf("Maximum Mutation Rate: %.4E \n",mutationRate2);
 
-       printf("Minimum Outflow Rate: %f \n",outflowRate1);
-       printf("Maximum Outflow Rate: %f \n",outflowRate2);
+       printf("Minimum Outflow Rate: %.4E \n",outflowRate1);
+       printf("Maximum Outflow Rate: %.4E \n",outflowRate2);
 
-       printf("Minimum Velocity: %f c\n",velocity1/c_kpc_Myr);
-       printf("Maximum Velocity: %f c\n",velocity2/c_kpc_Myr);
+       printf("Minimum Velocity: %.4E c\n",velocity1/c_kpc_Myr);
+       printf("Maximum Velocity: %.4E c\n",velocity2/c_kpc_Myr);
 
      }
 
    else if(parChoice=="gaussian")
 
        {
-         printf("Mean Prey Growth Rate: %f \n",preyGrow1);
-         printf("SD of Prey Growth Rate: %f \n",preyGrow2);
+         printf("Mean Prey Growth Rate: %.4E \n",preyGrow1);
+         printf("SD of Prey Growth Rate: %.4E \n",preyGrow2);
 
-         printf("Mean Prey Death Rate: %f \n",preyDeath1);
-         printf("SD of Prey Death Rate: %f \n",preyDeath2);
+         printf("Mean Prey Death Rate: %.4E \n",preyDeath1);
+         printf("SD of Prey Death Rate: %.4E \n",preyDeath2);
 
-         printf("Mean Predator Growth Rate: %f \n",predGrow1);
-         printf("SD of Predator Growth Rate: %f \n",predGrow2);
+         printf("Mean Predator Growth Rate: %.4E \n",predGrow1);
+         printf("SD of Predator Growth Rate: %.4E \n",predGrow2);
 
-         printf("Mean Predator Death Rate: %f \n",predDeath1);
-         printf("SD of Predator Death Rate: %f \n",predDeath2);
+         printf("Mean Predator Death Rate: %.4E \n",predDeath1);
+         printf("SD of Predator Death Rate: %.4E \n",predDeath2);
 
-         printf("Mean Prey Carrying Capacity: %f \n",preyCarry1);
-         printf("SD of Prey Carrying Capacity: %f \n",preyCarry2);
+         printf("Mean Prey Carrying Capacity: %.4E \n",preyCarry1);
+         printf("SD of Prey Carrying Capacity: %.4E \n",preyCarry2);
 
-         printf("Mean Predator Carrying Capacity: %f \n",predCarry1);
-         printf("SD of Predator Carrying Capacity: %f \n",predCarry2);
+         printf("Mean Predator Carrying Capacity: %.4E \n",predCarry1);
+         printf("SD of Predator Carrying Capacity: %.4E \n",predCarry2);
 
-         printf("Mean Mutation Rate: %f \n",mutationRate1);
-         printf("SD of Mutation Rate: %f \n",mutationRate2);
+         printf("Mean Mutation Rate: %.4E \n",mutationRate1);
+         printf("SD of Mutation Rate: %.4E \n",mutationRate2);
 
-         printf("Mean Outflow Rate: %f \n",outflowRate1);
-         printf("SD of Outflow Rate: %f \n",outflowRate2);
+         printf("Mean Outflow Rate: %.4E \n",outflowRate1);
+         printf("SD of Outflow Rate: %.4E \n",outflowRate2);
 
-         printf("Mean Velocity: %f c\n",velocity1/c_kpc_Myr);
-         printf("SD of Velocity: %f c\n",velocity2/c_kpc_Myr);
+         printf("Mean Velocity: %.4E c\n",velocity1/c_kpc_Myr);
+         printf("SD of Velocity: %.4E c\n",velocity2/c_kpc_Myr);
 
        }
 
