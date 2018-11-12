@@ -7,8 +7,10 @@
 
 #include "LKVertex.h"
 #include <string>
+#include "Constants.h"
 #include <sstream>
 #include <iomanip>
+
 
 LKVertex::LKVertex(int ID) :
     Vertex(ID)
@@ -239,12 +241,10 @@ void LKVertex::writeLKParametersToFile()
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
-    string divider = "---------------------\n";
-
     fprintf(infoFile,"Parameters for LKVertex %i \n", ident);
     fprintf(infoFile, "Time: %s \n", asctime(timeinfo));
     fprintf(infoFile,"Position: %f %f %f \n", position.elements[0],position.elements[1],position.elements[2]);
-    fprintf(infoFile, divider.c_str());
+    fprintf(infoFile, "%s",screenBar.c_str());
 
     // Print position, and number of connections
 

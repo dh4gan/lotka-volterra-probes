@@ -28,13 +28,18 @@ int main(int argc, char* argv[])
     // Display header
 
     printf("  \n");
-    printf("*********************************************** \n");
-    printf("    Lotka-Volterra Probes interacting on a Stellar Network \n");
-    printf("    Date Created : 1st January 2018 \n");
-    printf("    Current Version: 22nd February 2018 \n");
-    printf("*********************************************** \n");
+    printf("%s",screenBar.c_str());
+    printf("\tLotka-Volterra Probes interacting on a Stellar Network \n");
+    printf("\t\tVersion: %s\n", VERSION);
+    printf("\t\tCompiled: %s\n", __DATE__);
+    printf("\t\tgit commit: %s \n", GIT_HASH);
+    printf("%s",screenBar.c_str());
     printf("  \n");
 
+            
+    // Record start time
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    
     // Either read parameter filename from argv[] or command line
 
     string fileString;
@@ -158,6 +163,21 @@ int main(int argc, char* argv[])
 	}
 
 
+
+    // Simulation has now ended
+    // Write elapsed runtime to the screen
+    
+    std::chrono::high_resolution_clock::time_point finish = std::chrono::high_resolution_clock::now();
+        
+    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double> >(finish - start);
+        
+    printf("%s",screenBar.c_str());
+    printf("Run complete \n");
+    printf("Wall Clock Runtime: %f s \n", time_span.count());
+    printf("%s",screenBar.c_str());
+        
+
+    
     }
 
 

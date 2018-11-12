@@ -25,7 +25,8 @@ const double kpc = 3.086e19;
 const double AUtokpc = AU/kpc;
 const double rsoltokpc = rsol/kpc;
 const double c_kpc_Myr =  c*Myr/kpc;// speed of light in kpc Myr-1
-
+//const std::string screenBar="****************************************************************\n";
+const std::string screenBar = std::string(70,'*')+"\n";
 
 
 

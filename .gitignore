@@ -1,2 +1,3 @@
 plot/*.pyc
-
+src/*.o
+src/lotka_volterra_probes
